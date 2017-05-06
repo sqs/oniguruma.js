@@ -29,7 +29,10 @@
     "jasmine-focused": "~1.0.7"
   },
   "dependencies": {
-    "nan": "^2.0.9"
+    "autogypi": "^0.2.2",
+    "nan": "^2.0.9",
+    "nbind": "^0.3.11",
+    "node-gyp": "^3.6.1"
   },
   "scripts": {
     "test": "jasmine-focused --captureExceptions spec/*",
