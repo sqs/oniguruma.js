@@ -2,23 +2,25 @@
 #define SRC_ONIG_STRING_H_
 
 #include <memory>
+#include <stddef.h>
 
 using ::std::shared_ptr;
 
-class OnigString {
- public:
+class OnigString
+{
+public:
   explicit OnigString(std::string value);
   ~OnigString();
 
   int uniqueId() { return uniqueId_; }
 
-  const char* utf8_value() const { return utf8Value.c_str(); }
+  const char *utf8_value() const { return utf8Value.c_str(); }
   size_t utf8_length() const { return utf8_length_; }
 
   int ConvertUtf8OffsetToUtf16(int utf8Offset);
   int ConvertUtf16OffsetToUtf8(int utf16Offset);
 
- private:
+private:
   int uniqueId_;
   std::string utf8Value;
   size_t utf8_length_;
@@ -33,7 +35,8 @@ class OnigString {
 #include "nbind/nbind.h"
 
 #ifdef NBIND_CLASS
-NBIND_CLASS(OnigString) {
+NBIND_CLASS(OnigString)
+{
   construct<std::string>();
   method(uniqueId);
   method(utf8_value);
@@ -43,4 +46,4 @@ NBIND_CLASS(OnigString) {
 }
 #endif
 
-#endif  // SRC_ONIG_STRING_H_
+#endif // SRC_ONIG_STRING_H_
