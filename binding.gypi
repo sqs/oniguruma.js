@@ -86,9 +86,8 @@
     {
       'target_name': 'onig_scanner',
       'dependencies': [
-        'oniguruma'
+        'oniguruma',
       ],
-      'include_dirs': [ '<!(node -e "require(\'nan\')")' ],
       'sources': [
         'src/onig-result.cc',
         'src/onig-reg-exp.cc',
