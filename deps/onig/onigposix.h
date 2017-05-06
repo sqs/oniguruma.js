@@ -151,10 +151,12 @@ ONIG_EXTERN const char* onig_copyright P_((void));
 #endif /* ONIGURUMA_H */
 
 
+#ifndef ONIG_SKIP_POSIX_REGEX_H
 ONIG_EXTERN int    regcomp P_((regex_t* reg, const char* pat, int options));
 ONIG_EXTERN int    regexec P_((regex_t* reg, const char* str, size_t nmatch, regmatch_t* matches, int options));
 ONIG_EXTERN void   regfree P_((regex_t* reg));
 ONIG_EXTERN size_t regerror P_((int code, const regex_t* reg, char* buf, size_t size));
+#endif /* ONIG_SKIP_POSIX_REGEX_H */
 
 /* extended API */
 ONIG_EXTERN void reg_set_encoding P_((int enc));

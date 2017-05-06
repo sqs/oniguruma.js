@@ -130,6 +130,7 @@ onig2posix_error_code(int code)
   return REG_EONIG_INTERNAL;  /* but, unknown error code */
 }
 
+#ifndef ONIG_SKIP_POSIX_REGEX_H
 extern int
 regcomp(regex_t* reg, const char* pattern, int posix_options)
 {
@@ -225,6 +226,7 @@ regfree(regex_t* reg)
 {
   onig_free(ONIG_C(reg));
 }
+#endif /* ONIG_SKIP_POSIX_REGEX_H */
 
 
 extern void

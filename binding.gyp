@@ -3,6 +3,7 @@
     {
       'target_name': 'oniguruma',
       'type': 'static_library',
+      'defines': ['ONIG_SKIP_POSIX_REGEX_H'],
       'conditions': [
         ['OS=="win"', {
           'msvs_disabled_warnings': [

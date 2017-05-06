@@ -68,6 +68,7 @@ static char* ESTRING[] = {
 #include <stdio.h>
 
 
+#ifndef ONIG_SKIP_POSIX_REGEX_H
 extern size_t
 regerror(int posix_ecode, const regex_t* reg ARG_UNUSED, char* buf,
 	 size_t size)
@@ -96,3 +97,4 @@ regerror(int posix_ecode, const regex_t* reg ARG_UNUSED, char* buf,
   }
   return len;
 }
+#endif /* ONIG_SKIP_POSIX_REGEX_H */
