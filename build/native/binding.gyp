@@ -1,7 +1,9 @@
 {
+"targets": [
+{"includes": ["../auto.gypi","../../deps/binding.gypi"]},
+{"includes": ["../auto.gypi","../../src/binding.gypi"]},
+],
 	"includes": [
-		"../../binding.gypi",
-		"../auto.gypi",
-		"../auto-top.gypi"
+				"../auto-top.gypi",
 	]
 }

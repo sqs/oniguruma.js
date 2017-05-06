@@ -1,7 +1,7 @@
 #ifndef SRC_ONIG_RESULT_H_
 #define SRC_ONIG_RESULT_H_
 
-#include "nan.h"
+#include "nbind/api.h"
 #include "oniguruma.h"
 
 class OnigResult {
@@ -22,5 +22,18 @@ class OnigResult {
   OnigRegion *region_;
   int indexInScanner;
 };
+
+#include "nbind/nbind.h"
+
+#ifdef NBIND_CLASS
+NBIND_CLASS(OnigResult) {
+  construct<OnigRegion*, int>();
+  method(Count);
+  method(LocationAt);
+  method(LengthAt);
+  method(Index);
+  method(SetIndex);
+}
+#endif
 
 #endif  // SRC_ONIG_RESULT_H_
