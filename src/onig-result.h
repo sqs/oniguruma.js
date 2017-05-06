@@ -1,7 +1,6 @@
 #ifndef SRC_ONIG_RESULT_H_
 #define SRC_ONIG_RESULT_H_
 
-#include "nbind/api.h"
 #include "oniguruma.h"
 
 class OnigResult {

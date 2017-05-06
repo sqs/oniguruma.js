@@ -13,11 +13,6 @@ void OnigScanner::Init(Local<Object> target) {
   target->Set(Nan::New<String>("OnigScanner").ToLocalChecked(), tpl->GetFunction());
 }
 
-void InitModule(Local<Object> target) {
-  OnigScanner::Init(target);
-  OnigString::Init(target);
-}
-
 NODE_MODULE(onig_scanner, InitModule)
 
 NAN_METHOD(OnigScanner::New) {

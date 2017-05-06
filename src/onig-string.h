@@ -3,33 +3,24 @@
 
 #include <memory>
 
-#include "nan.h"
-
 using ::std::shared_ptr;
 
-using ::v8::Local;
-using ::v8::Object;
-using ::v8::String;
-
-class OnigString : public node::ObjectWrap {
+class OnigString {
  public:
-  static void Init(Local<Object> target);
-  explicit OnigString(Local<String> value);
+  explicit OnigString(std::string value);
   ~OnigString();
 
   int uniqueId() { return uniqueId_; }
 
-  const char* utf8_value() const { return *utf8Value; }
+  const char* utf8_value() const { return utf8Value.c_str(); }
   size_t utf8_length() const { return utf8_length_; }
 
   int ConvertUtf8OffsetToUtf16(int utf8Offset);
   int ConvertUtf16OffsetToUtf8(int utf16Offset);
 
  private:
-  static NAN_METHOD(New);
-
   int uniqueId_;
-  String::Utf8Value utf8Value;
+  std::string utf8Value;
   size_t utf8_length_;
   bool hasMultiByteChars;
 
@@ -38,5 +29,18 @@ class OnigString : public node::ObjectWrap {
   int *utf16OffsetToUtf8;
   int *utf8OffsetToUtf16;
 };
+
+#include "nbind/nbind.h"
+
+#ifdef NBIND_CLASS
+NBIND_CLASS(OnigString) {
+  construct<std::string>();
+  method(uniqueId);
+  method(utf8_value);
+  method(utf8_length);
+  method(ConvertUtf8OffsetToUtf16);
+  method(ConvertUtf16OffsetToUtf8);
+}
+#endif
 
 #endif  // SRC_ONIG_STRING_H_
