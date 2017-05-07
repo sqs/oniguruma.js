@@ -58,7 +58,7 @@ class OnigScanner
 public:
   OnigScanner(std::vector<std::string> sources);
   ~OnigScanner();
-  OnigNextMatchResult *FindNextMatchSync(OnigString *onigString, int startLocation);
+  OnigNextMatchResult *FindNextMatchSync(OnigString onigString, int startLocation);
   static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(OnigResult *result, OnigString *source);
 
 private:

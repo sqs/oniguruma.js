@@ -65,6 +65,7 @@ export class OnigRegExp {
 	}
 
 	searchSync(s: string | OnigString, startPosition: number = 0): OnigCaptureIndex[] | null {
+		s = convertToOnigString(s);
 		const match = this.scanner.findNextMatchSync(s, startPosition);
 		if (match) { return OnigRegExp.captureIndicesForMatch(s, match); }
 		return null;
@@ -92,7 +93,7 @@ export interface OnigScanner extends LibTypes.OnigScanner {
 
 // tslint:disable-next-line:space-before-function-paren
 OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, startPosition: number = 0): LibTypes.OnigNextMatchResult | null {
-	return this.FindNextMatchSync(convertToOnigString(s), convertToPositiveCountableInteger(startPosition));
+	return this.FindNextMatchSync(convertToOnigString(s) as any, convertToPositiveCountableInteger(startPosition));
 };
 
 OnigScanner.prototype._findNextMatchSync = OnigScanner.prototype.findNextMatchSync;
@@ -104,28 +105,17 @@ function convertToPositiveCountableInteger(value: any): number {
 	return value;
 }
 
-function convertToOnigString(value: any): LibTypes.OnigString {
-	if (value instanceof OnigString) { return getOnigStringPointer(value); }
-	if (typeof value === 'string') { return getOnigStringPointer(new OnigString(value)); }
+function convertToOnigString(value: any): OnigString {
+	if (value instanceof OnigString) { return value; }
+	if (typeof value === 'string') { return new OnigString(value, 0); }
 	throw new Error('convertToOnigString: invalid value: ' + value);
 }
 
-/**
- * getOnigStringPointer returns an OnigString's C pointer. The pointer field is
- * intentionally private in the exported class definition.
- */
-function getOnigStringPointer(s: OnigString): LibTypes.OnigString {
-	return (s as any).ptr;
-}
-
 export class OnigString {
-	private ptr: LibTypes.OnigString;
-
-	constructor(private value: string) {
+	constructor(private value: string, x: number = 0) {
 		if (typeof value !== 'string') {
 			throw new Error('OnigString: invalid non-string value of type ' + typeof value);
 		}
-		this.ptr = new lib.OnigString(value);
 	}
 
 	// $str is the (private, undocumented) property name used by
@@ -141,6 +131,10 @@ export class OnigString {
 	slice(start?: number, end?: number): string { return this.value.slice(start, end); }
 	substring(start: number, end?: number): string { return this.value.substring(start, end); }
 	toString(): string { return this.value; }
+
+	fromJS(output: (value: string, x: number) => void): void {
+		output(this.value, 0);
+	}
 }
 
-binding.bind('OnigCaptureIndex', OnigCaptureIndexImpl);
+binding.bind('OnigString', OnigString);

@@ -1,7 +1,7 @@
 #include "./str.h"
 
-OnigString::OnigString(std::string value)
-		: utf8Value(value), utf8_length_(utf8Value.length())
+OnigString::OnigString(std::string utf8Value, int x)
+		: utf8Value(utf8Value), utf8_length_(utf8Value.length())
 {
 	static int idGenerator = 0;
 	uniqueId_ = ++idGenerator;
@@ -116,7 +116,8 @@ int OnigString::ConvertUtf16OffsetToUtf8(int utf16Offset)
 #ifdef NBIND_CLASS
 NBIND_CLASS(OnigString)
 {
-	construct<std::string>();
+	construct<std::string, int>();
+	construct<const OnigString *>();
 	method(uniqueId);
 	method(utf8_value);
 	method(utf8_length);

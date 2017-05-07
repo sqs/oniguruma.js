@@ -6,11 +6,17 @@
             "request": "launch",
             "name": "Run Tests",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
-			"args": ["--recursive", "out/**/*_test.js"],
-			"sourceMaps": true,
+            "args": [
+                "--recursive",
+                "dist/test/**/*_test.js"
+            ],
+            "sourceMaps": true,
             "cwd": "${workspaceRoot}",
-			"outFiles": ["${workspaceRoot}/out/**/*.js"],
-            "preLaunchTask": "yarn"
+            "outFiles": [
+                "${workspaceRoot}/dist/**/*.js"
+            ],
+            "preLaunchTask": "TypeScript: Build & Watch",
+            "protocol": "inspector"
         },
         {
             "type": "node",

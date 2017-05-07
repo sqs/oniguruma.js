@@ -15,14 +15,14 @@ OnigScanner::OnigScanner(std::vector<std::string> sources)
 
 OnigScanner::~OnigScanner() {}
 
-OnigNextMatchResult *OnigScanner::FindNextMatchSync(OnigString *onigString, int startLocation)
+OnigNextMatchResult *OnigScanner::FindNextMatchSync(OnigString onigString, int startLocation)
 {
-  shared_ptr<OnigResult> bestResult = searcher->Search(onigString, startLocation);
+  shared_ptr<OnigResult> bestResult = searcher->Search(&onigString, startLocation);
   if (bestResult != NULL)
   {
     OnigNextMatchResult *result = new OnigNextMatchResult();
     result->index = bestResult->Index();
-    result->captureIndices = CaptureIndicesForMatch(bestResult.get(), onigString);
+    result->captureIndices = CaptureIndicesForMatch(bestResult.get(), &onigString);
     return result;
   }
   return NULL;
