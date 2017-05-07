@@ -1,4 +1,4 @@
-#include "reg-exp.h"
+#include "./regexp.h"
 #include "nbind/api.h"
 
 OnigRegExp::OnigRegExp(const string &source)

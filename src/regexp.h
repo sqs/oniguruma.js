@@ -4,31 +4,32 @@
 #include <memory>
 #include <string>
 
-#include "result.h"
-#include "string.h"
+#include "./result.h"
+#include "./str.h"
 
 using ::std::shared_ptr;
 using ::std::string;
 
-class OnigRegExp {
- public:
-  explicit OnigRegExp(const string& source);
+class OnigRegExp
+{
+public:
+  explicit OnigRegExp(const string &source);
   ~OnigRegExp();
 
-  shared_ptr<OnigResult> Search(OnigString* str, int position);
+  shared_ptr<OnigResult> Search(OnigString *str, int position);
 
- private:
-  OnigRegExp(const OnigRegExp&);  // Disallow copying
-  OnigRegExp &operator=(const OnigRegExp&);  // Disallow copying
+private:
+  OnigRegExp(const OnigRegExp &);            // Disallow copying
+  OnigRegExp &operator=(const OnigRegExp &); // Disallow copying
 
-  shared_ptr<OnigResult> Search(const char* data, size_t position, size_t end);
+  shared_ptr<OnigResult> Search(const char *data, size_t position, size_t end);
 
   string source_;
-  regex_t* regex_;
+  regex_t *regex_;
 
   int lastSearchStrUniqueId;
   int lastSearchPosition;
   shared_ptr<OnigResult> lastSearchResult;
 };
 
-#endif  // SRC_ONIG_REG_EXP_H_
+#endif // SRC_ONIG_REG_EXP_H_

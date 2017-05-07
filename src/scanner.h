@@ -2,11 +2,10 @@
 #define SRC_ONIG_SCANNER_H_
 
 #include <memory>
-#include "nan.h"
-#include "string.h"
-#include "result.h"
-#include "reg-exp.h"
-#include "searcher.h"
+#include "./str.h"
+#include "./result.h"
+#include "./regexp.h"
+#include "./searcher.h"
 #include "nbind/api.h"
 #include "nbind/nbind.h"
 

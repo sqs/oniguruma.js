@@ -1,26 +1,31 @@
-#include "searcher.h"
+#include "./searcher.h"
 
-shared_ptr<OnigResult> OnigSearcher::Search(OnigString* source, int charOffset) {
+shared_ptr<OnigResult> OnigSearcher::Search(OnigString *source, int charOffset)
+{
   int byteOffset = source->ConvertUtf16OffsetToUtf8(charOffset);
 
   int bestLocation = 0;
   shared_ptr<OnigResult> bestResult;
 
-  vector< shared_ptr<OnigRegExp> >::iterator iter = regExps.begin();
+  vector<shared_ptr<OnigRegExp>>::iterator iter = regExps.begin();
   int index = 0;
-  while (iter < regExps.end()) {
+  while (iter < regExps.end())
+  {
     OnigRegExp *regExp = (*iter).get();
     shared_ptr<OnigResult> result = regExp->Search(source, byteOffset);
-    if (result != NULL && result->Count() > 0) {
+    if (result != NULL && result->Count() > 0)
+    {
       int location = result->LocationAt(0);
 
-      if (bestResult == NULL || location < bestLocation) {
+      if (bestResult == NULL || location < bestLocation)
+      {
         bestLocation = location;
         bestResult = result;
         bestResult->SetIndex(index);
       }
 
-      if (location == byteOffset) {
+      if (location == byteOffset)
+      {
         break;
       }
     }
