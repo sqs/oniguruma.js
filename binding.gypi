@@ -1,5 +1,4 @@
 {
-    'target_name': 'oniguruma.js',
     'sources': [
         'src/onig-result.cc',
         'src/onig-reg-exp.cc',
