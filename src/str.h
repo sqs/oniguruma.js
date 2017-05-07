@@ -33,18 +33,4 @@ private:
   int *utf8OffsetToUtf16;
 };
 
-#include "nbind/nbind.h"
-
-#ifdef NBIND_CLASS
-NBIND_CLASS(OnigString)
-{
-  construct<std::string>();
-  method(uniqueId);
-  method(utf8_value);
-  method(utf8_length);
-  method(ConvertUtf8OffsetToUtf16);
-  method(ConvertUtf16OffsetToUtf8);
-}
-#endif
-
 #endif // SRC_ONIG_STR_H_

@@ -110,3 +110,17 @@ int OnigString::ConvertUtf16OffsetToUtf8(int utf16Offset)
 	}
 	return utf16Offset;
 }
+
+#include "nbind/nbind.h"
+
+#ifdef NBIND_CLASS
+NBIND_CLASS(OnigString)
+{
+	construct<std::string>();
+	method(uniqueId);
+	method(utf8_value);
+	method(utf8_length);
+	method(ConvertUtf8OffsetToUtf16);
+	method(ConvertUtf16OffsetToUtf8);
+}
+#endif // NBIND_CLASS

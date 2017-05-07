@@ -49,3 +49,28 @@ std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(OnigResult *re
 
   return captures;
 }
+
+#include "nbind/nbind.h"
+
+#ifdef NBIND_CLASS
+NBIND_CLASS(OnigCaptureIndex)
+{
+  construct<>();
+  getter(getIndex);
+  getter(getStart);
+  getter(getEnd);
+  getter(getLength);
+}
+NBIND_CLASS(OnigNextMatchResult)
+{
+  construct<>();
+  getter(getIndex);
+  getter(getCaptureIndices);
+}
+NBIND_CLASS(OnigScanner)
+{
+  construct<std::vector<std::string>>();
+  method(FindNextMatchSync);
+  method(CaptureIndicesForMatch);
+}
+#endif // NBIND_CLASS

@@ -23,17 +23,4 @@ private:
   int indexInScanner;
 };
 
-#include "nbind/nbind.h"
-
-#ifdef NBIND_CLASS
-NBIND_CLASS(OnigResult)
-{
-  method(Count);
-  method(LocationAt);
-  method(LengthAt);
-  method(Index);
-  method(SetIndex);
-}
-#endif // NBIND_CLASS
-
 #endif // SRC_ONIG_RESULT_H_

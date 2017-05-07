@@ -6,8 +6,6 @@
 #include "./result.h"
 #include "./regexp.h"
 #include "./searcher.h"
-#include "nbind/api.h"
-#include "nbind/nbind.h"
 
 using ::std::shared_ptr;
 using ::std::vector;
@@ -50,32 +48,5 @@ private:
   vector<shared_ptr<OnigRegExp>> regExps;
   shared_ptr<OnigSearcher> searcher;
 };
-
-#ifdef NBIND_CLASS
-
-NBIND_CLASS(OnigCaptureIndex)
-{
-  construct<>();
-  getter(getIndex);
-  getter(getStart);
-  getter(getEnd);
-  getter(getLength);
-}
-
-NBIND_CLASS(OnigNextMatchResult)
-{
-  construct<>();
-  getter(getIndex);
-  getter(getCaptureIndices);
-}
-
-NBIND_CLASS(OnigScanner)
-{
-  construct<std::vector<std::string>>();
-  method(FindNextMatchSync);
-  method(CaptureIndicesForMatch);
-}
-
-#endif // NBIND_CLASS
 
 #endif // SRC_ONIG_SCANNER_H_
