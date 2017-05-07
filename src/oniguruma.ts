@@ -93,16 +93,34 @@ export const lib = nbind.init<typeof LibTypes>('dist').lib;
 // 	return value;
 // };
 
-export class OnigString extends lib.OnigString {
-	get length(): number {
-		return this.toString().length;
-	}
+export const OnigString: OnigStringCtor = lib.OnigString as any;
 
-	public substring(start: number, end?: number): string {
-		return this.toString().substring(start, end);
-	}
-
-	public toString(): string {
-		return (this as LibTypes.OnigString).utf8_value() || 'null';
-	}
+export interface OnigStringCtor {
+	new (s: string): OnigString;
+	prototype: OnigString;
 }
+
+export interface OnigString extends LibTypes.OnigString {
+	length: number;
+	substring(start: number, end?: number): string;
+	toString(): string;
+}
+
+Object.defineProperty(OnigString.prototype, 'length', {
+	// tslint:disable-next-line:object-literal-shorthand space-before-function-paren
+	get: function (this: OnigString): number {
+		return this.utf8_length();
+	},
+	configurable: true,
+	enumerable: true,
+});
+
+// tslint:disable-next-line:space-before-function-paren
+OnigString.prototype.substring = function (start: number, end?: number): string {
+	return this.utf8_value()!.substring(start, end);
+};
+
+// tslint:disable-next-line:space-before-function-paren
+OnigString.prototype.toString = function (): string {
+	return this.utf8_value()!;
+};

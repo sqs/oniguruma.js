@@ -6,24 +6,24 @@ describe('OnigString', () => {
 		assert.equal(new OnigString('abc').length, 3);
 	});
 
-	// it('can be converted back into a string', () => {
-	// 	expect(new OnigString('abc').toString()).toBe('abc');
-	// })
+	it('can be converted back into a string', () => {
+		assert.equal(new OnigString('abc').toString(), 'abc');
+	});
 
-	// it('can retrieve substrings (for conveniently inspecting captured text)', () => {
-	// 	const string = 'abcdef';
-	// 	const onigString = new OnigString(string);
-	// 	expect(onigString.substring(2, 3)).toBe(string.substring(2, 3));
-	// 	expect(onigString.substring(2)).toBe(string.substring(2));
-	// 	expect(onigString.substring()).toBe(string.substring());
-	// 	expect(onigString.substring(-1)).toBe(string.substring(-1));
-	// 	expect(onigString.substring(-1, -2)).toBe(string.substring(-1, -2));
+	it('can retrieve substrings (for conveniently inspecting captured text)', () => {
+		const s = 'abcdef';
+		const onigString = new OnigString(s);
+		assert.equal(onigString.substring(2, 3), s.substring(2, 3));
+		assert.equal(onigString.substring(2), s.substring(2));
+		assert.equal((onigString.substring as any)(), (s.substring as any)());
+		assert.equal(onigString.substring(-1), s.substring(-1));
+		assert.equal(onigString.substring(-1, -2), s.substring(-1, -2));
 
-	// 	onigString.substring({});
-	// 	onigString.substring(null, undefined);
-	// })
+		(onigString.substring as any)({});
+		(onigString.substring as any)(null, undefined);
+	});
 
-	// it('handles invalid arguments', () => {
-	// 	expect(() => new OnigString(undefined)).toThrow('Argument must be a string');
-	// })
-})
+	it('handles invalid arguments', () => {
+		assert.throws(() => new (OnigString as any)(undefined), /Argument must be a string/);
+	});
+});
