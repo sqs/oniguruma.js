@@ -1,7 +1,7 @@
 #include "./regexp.h"
 #include "nbind/api.h"
 
-OnigRegExp::OnigRegExp(const string &source)
+OnigRegExp::OnigRegExp(const std::string &source)
     : source_(source),
       regex_(NULL)
 {
@@ -41,12 +41,12 @@ shared_ptr<OnigResult> OnigRegExp::Search(OnigString *str, int position)
 
   lastSearchStrUniqueId = str->uniqueId();
   lastSearchPosition = position;
-  lastSearchResult = Search(str->utf8_value(), position, str->utf8_length());
+  lastSearchResult = DoSearch(str->utf8_value(), position, str->utf8_length());
   return lastSearchResult;
 }
 
-shared_ptr<OnigResult> OnigRegExp::Search(const char *data,
-                                          size_t position, size_t end)
+shared_ptr<OnigResult> OnigRegExp::DoSearch(const char *data,
+                                            size_t position, size_t end)
 {
   if (!regex_)
   {
@@ -70,3 +70,13 @@ shared_ptr<OnigResult> OnigRegExp::Search(const char *data,
     return shared_ptr<OnigResult>();
   }
 }
+
+#include "nbind/nbind.h"
+
+#ifdef NBIND_CLASS
+NBIND_CLASS(OnigRegExp)
+{
+  construct<std::string &>();
+  method(Search);
+}
+#endif // NBIND_CLASS

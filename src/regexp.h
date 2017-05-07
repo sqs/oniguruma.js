@@ -8,12 +8,11 @@
 #include "./str.h"
 
 using ::std::shared_ptr;
-using ::std::string;
 
 class OnigRegExp
 {
 public:
-  explicit OnigRegExp(const string &source);
+  explicit OnigRegExp(const std::string &source);
   ~OnigRegExp();
 
   shared_ptr<OnigResult> Search(OnigString *str, int position);
@@ -22,9 +21,9 @@ private:
   OnigRegExp(const OnigRegExp &);            // Disallow copying
   OnigRegExp &operator=(const OnigRegExp &); // Disallow copying
 
-  shared_ptr<OnigResult> Search(const char *data, size_t position, size_t end);
+  shared_ptr<OnigResult> DoSearch(const char *data, size_t position, size_t end);
 
-  string source_;
+  std::string source_;
   regex_t *regex_;
 
   int lastSearchStrUniqueId;
