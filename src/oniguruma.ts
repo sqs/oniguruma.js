@@ -1,12 +1,48 @@
 import * as nbind from 'nbind';
 import * as LibTypes from './lib';
 
+// used only for asmjs
+declare var XMLHttpRequest: any;
+declare var require: any;
+
 const platform = 'asmjs'; // (process.env.EMSCRIPTEN ? 'asmjs' : 'native');
 let binding: nbind.Binding<typeof LibTypes>;
-if (platform === 'asmjs') {
-	binding = nbind.init<typeof LibTypes>();
-} else {
+if (nbind.init) {
 	binding = nbind.init<typeof LibTypes>('dist/' + platform);
+} else {
+	const emModule = {
+		// tslint:disable-next-line:ban-types
+		readAsync: function readAsync(url: string, onload: Function, onerror: Function) {
+			if (/\.mem$/.test(url)) {
+				onload(require('arraybuffer-loader!../asmjs/nbind.js.mem'));
+				return;
+			}
+
+			const xhr = new XMLHttpRequest();
+			xhr.open('GET', url, true);
+			xhr.responseType = 'arraybuffer';
+			xhr.onload = function xhr_onload() {
+				if (xhr.status === 200 || xhr.status === 0 && xhr.response) {
+					onload(xhr.response);
+				} else {
+					onerror();
+				}
+			}
+				;
+			xhr.onerror = onerror;
+			xhr.send(null);
+		},
+	};
+	(nbind as any)(emModule, (err: any, binding2: any) => {
+		console.log('from nbind');
+		if (err) { console.log('nbind ERR', err); }
+		if (binding2) {
+			console.log('nbind BINDING', binding2);
+			// tslint:disable-next-line:no-debugger
+			//debugger;
+		}
+		binding = binding2;
+	});
 }
 export const lib = binding.lib;
 
@@ -83,12 +119,18 @@ export interface OnigScannerCtor {
 
 export interface OnigScanner extends LibTypes.OnigScanner {
 	findNextMatchSync(s: string | OnigString, startPosition: number): LibTypes.OnigNextMatchResult | null;
+
+	// vscode-textmate's oniguruma.d.ts wants to call _findNextMatchSync (with an
+	// underscore) for some reason.
+	_findNextMatchSync(s: string | OnigString, startPosition: number): LibTypes.OnigNextMatchResult | null;
 }
 
 // tslint:disable-next-line:space-before-function-paren
 OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, startPosition: number = 0): LibTypes.OnigNextMatchResult | null {
 	return this.FindNextMatchSync(convertToOnigString(s), convertToPositiveCountableInteger(startPosition));
 };
+
+OnigScanner.prototype._findNextMatchSync = OnigScanner.prototype.findNextMatchSync;
 
 function convertToPositiveCountableInteger(value: any): number {
 	value = parseInt(value, 10);

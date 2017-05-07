@@ -102,6 +102,11 @@
         ['OS=="freebsd"', {
             'conlyflags': ['-std=gnu99'],
             'cppflags':['-std=c++0x'],
-        }]
+        }],
+
+        ['asmjs==1', {
+            #'cflags': ['-O0', '--memory-init-file', '0', '-g3', '-s', 'ALLOW_MEMORY_GROWTH=1'],
+            'cflags': ['-O3', '--memory-init-file', '0', '-s', 'TOTAL_MEMORY=268435456'],
+        }],
     ]
 }
