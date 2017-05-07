@@ -47,7 +47,7 @@
     "copyasm": "copyasm",
     "ndts": "ndts",
     "build:native": "autogypi -r build && node-gyp -C build/native configure build && copyasm build/native dist && ndts build/native > src/lib.d.ts",
-    "build:asmjs": "autogypi -r build && node-gyp -C build/asmjs configure build --asmjs=1 && copyasm build/asmjs dist && ndts build/native > src/lib.d.ts",
+    "build:asmjs": "autogypi -r build && node-gyp -C build/asmjs configure build --asmjs=1 && copyasm build/asmjs dist && ndts build/asmjs > src/lib.d.ts",
     "install": "(npm run build:native || echo Warning: problems with native build)",
     "prepublish": "(npm run build:asmjs || echo Warning: problems with asm.js build)",
     "lint": "./node_modules/.bin/tslint --format verbose \"src/**/*.ts\"",

@@ -28,6 +28,14 @@ export class OnigNextMatchResult extends NBindBase {
 	captureIndices: OnigCaptureIndex[];
 }
 
+export class OnigRegExp extends NBindBase {
+	/** OnigRegExp(std::string &); */
+	constructor(p0: any);
+
+	/** std::shared_ptr<OnigResult> Search(OnigString *, int32_t); */
+	Search(p0: OnigString, p1: number): OnigResult | null;
+}
+
 export class OnigResult extends NBindBase {
 	/** int32_t Count(); */
 	Count(): number;
