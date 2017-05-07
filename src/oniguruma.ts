@@ -32,6 +32,7 @@ if (nbind.init) {
 			xhr.onerror = onerror;
 			xhr.send(null);
 		},
+		TOTAL_MEMORY: 268435456,
 	};
 	(nbind as any)(emModule, (err: any, binding2: any) => {
 		console.log('from nbind');
