@@ -1,12 +1,11 @@
 {
     'target_name': 'oniguruma.js',
     'sources': [
-        'onig-result.cc',
-        'onig-reg-exp.cc',
-        'onig-scanner.cc',
-        'onig-scanner-worker.cc',
-        'onig-searcher.cc',
-        'onig-string.cc',
+        'src/onig-result.cc',
+        'src/onig-reg-exp.cc',
+        'src/onig-scanner.cc',
+        'src/onig-searcher.cc',
+        'src/onig-string.cc',
         'deps/onig/oniggnu.h',
         'deps/onig/onigposix.h',
         'deps/onig/oniguruma.h',
@@ -61,6 +60,7 @@
         'deps/onig/enc/utf8.c',
     ],
     'include_dirs': [
+        'src',
         'deps/onig',
         'deps/onig/enc',
     ],

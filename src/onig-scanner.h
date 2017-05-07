@@ -16,7 +16,7 @@ using ::std::vector;
 class OnigCaptureIndex
 {
 public:
-  OnigCaptureIndex();
+  OnigCaptureIndex(){};
   int index;
   int start;
   int end;
@@ -31,7 +31,7 @@ public:
 class OnigNextMatchResult
 {
 public:
-  OnigNextMatchResult();
+  OnigNextMatchResult(){};
   int index;
   std::vector<OnigCaptureIndex> captureIndices;
 
