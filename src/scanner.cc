@@ -1,4 +1,4 @@
-#include "onig-scanner.h"
+#include "scanner.h"
 
 OnigScanner::OnigScanner(std::vector<std::string> sources)
 {

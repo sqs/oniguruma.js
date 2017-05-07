@@ -1,10 +1,10 @@
 {
     'sources': [
-        'src/onig-result.cc',
-        'src/onig-reg-exp.cc',
-        'src/onig-scanner.cc',
-        'src/onig-searcher.cc',
-        'src/onig-string.cc',
+        'src/result.cc',
+        'src/regexp.cc',
+        'src/scanner.cc',
+        'src/searcher.cc',
+        'src/string.cc',
         'deps/onig/oniggnu.h',
         'deps/onig/onigposix.h',
         'deps/onig/oniguruma.h',

@@ -1,4 +1,4 @@
-#include "onig-string.h"
+#include "string.h"
 
 OnigString::OnigString(std::string value)
 		: utf8Value(value), utf8_length_(utf8Value.length())

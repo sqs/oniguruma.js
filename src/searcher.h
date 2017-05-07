@@ -2,9 +2,9 @@
 #define SRC_ONIG_SEARCHER_H_
 
 #include <vector>
-#include "onig-string.h"
-#include "onig-reg-exp.h"
-#include "onig-result.h"
+#include "string.h"
+#include "reg-exp.h"
+#include "result.h"
 
 using ::std::shared_ptr;
 using ::std::vector;

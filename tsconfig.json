@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "declaration": true,
+        "module": "commonjs",
+        "lib": [
+            "es6"
+        ],
+        "moduleResolution": "node",
+        "outDir": "./lib",
+        "preserveConstEnums": true,
+        "removeComments": true,
+        "strict": true,
+        "sourceMap": true,
+        "typeRoots": [
+            "./node_modules/@types"
+        ],
+        "types": [
+            "mocha"
+        ]
+    }
+}

@@ -4,8 +4,8 @@
 #include <memory>
 #include <string>
 
-#include "onig-result.h"
-#include "onig-string.h"
+#include "result.h"
+#include "string.h"
 
 using ::std::shared_ptr;
 using ::std::string;

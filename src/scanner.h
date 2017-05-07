@@ -3,10 +3,10 @@
 
 #include <memory>
 #include "nan.h"
-#include "onig-string.h"
-#include "onig-result.h"
-#include "onig-reg-exp.h"
-#include "onig-searcher.h"
+#include "string.h"
+#include "result.h"
+#include "reg-exp.h"
+#include "searcher.h"
 #include "nbind/api.h"
 #include "nbind/nbind.h"
 

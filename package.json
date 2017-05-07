@@ -25,8 +25,14 @@
     "async"
   ],
   "devDependencies": {
+    "@types/mocha": "^2.2.41",
+    "@types/node": "^7.0.18",
     "async": "~0.9.0",
-    "jasmine-focused": "~1.0.7"
+    "jasmine-focused": "~1.0.7",
+    "mocha": "^3.3.0",
+    "ts-node": "^3.0.4",
+    "tslint": "^5.2.0",
+    "typescript": "^2.3.2"
   },
   "dependencies": {
     "autogypi": "^0.2.2",
@@ -40,14 +46,15 @@
     "emcc-path": "emcc-path",
     "copyasm": "copyasm",
     "ndts": "ndts",
-
     "build:native": "autogypi -r build && node-gyp -C build/native configure build && copyasm build/native dist",
-    "build:asmjs":  "autogypi -r build && node-gyp -C build/asmjs  configure build --asmjs=1 && copyasm build/asmjs dist",
-
+    "build:asmjs": "autogypi -r build && node-gyp -C build/asmjs  configure build --asmjs=1 && copyasm build/asmjs dist",
     "install": "(npm run build:native || echo Warning: problems with native build)",
     "prepublish": "(npm run build:asmjs || echo Warning: problems with asm.js build)",
-
-    "test": "jasmine-focused --captureExceptions spec/*",
+    "lint": "./node_modules/.bin/tslint --format verbose \"src/**/*.ts\"",
+    "test": "./node_modules/.bin/tsc -p ./ && mocha --compilers ts:ts-node/register --recursive test/**/*.ts",
+    "compile": "./node_modules/.bin/tsc -p ./",
+    "watch": "./node_modules/.bin/tsc -w -p ./",
+    "watch:test": "yarn run test -- -w",
     "benchmark": "benchmark/benchmark.coffee"
   }
 }
