@@ -7,7 +7,7 @@
             "es6"
         ],
         "moduleResolution": "node",
-        "outDir": "./out",
+        "outDir": "./dist",
         "preserveConstEnums": true,
         "removeComments": true,
         "strict": true,

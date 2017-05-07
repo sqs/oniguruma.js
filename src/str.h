@@ -1,5 +1,5 @@
-#ifndef SRC_ONIG_STRING_H_
-#define SRC_ONIG_STRING_H_
+#ifndef SRC_ONIG_STR_H_
+#define SRC_ONIG_STR_H_
 
 #include <memory>
 #include <string>
@@ -47,4 +47,4 @@ NBIND_CLASS(OnigString)
 }
 #endif
 
-#endif // SRC_ONIG_STRING_H_
+#endif // SRC_ONIG_STR_H_

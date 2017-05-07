@@ -3,9 +3,10 @@
 
 #include "oniguruma.h"
 
-class OnigResult {
- public:
-  explicit OnigResult(OnigRegion* region, int indexInScanner);
+class OnigResult
+{
+public:
+  explicit OnigResult(OnigRegion *region, int indexInScanner);
   ~OnigResult();
 
   int Count();
@@ -14,9 +15,9 @@ class OnigResult {
   int Index() { return indexInScanner; }
   void SetIndex(int newIndex) { indexInScanner = newIndex; }
 
- private:
-  OnigResult(const OnigResult&);  // Disallow copying
-  OnigResult &operator=(const OnigResult&);  // Disallow copying
+private:
+  OnigResult(const OnigResult &);            // Disallow copying
+  OnigResult &operator=(const OnigResult &); // Disallow copying
 
   OnigRegion *region_;
   int indexInScanner;
@@ -25,14 +26,14 @@ class OnigResult {
 #include "nbind/nbind.h"
 
 #ifdef NBIND_CLASS
-NBIND_CLASS(OnigResult) {
-  construct<OnigRegion*, int>();
+NBIND_CLASS(OnigResult)
+{
   method(Count);
   method(LocationAt);
   method(LengthAt);
   method(Index);
   method(SetIndex);
 }
-#endif
+#endif // NBIND_CLASS
 
-#endif  // SRC_ONIG_RESULT_H_
+#endif // SRC_ONIG_RESULT_H_
