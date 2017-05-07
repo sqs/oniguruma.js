@@ -1,7 +1,8 @@
 import * as nbind from 'nbind';
 import * as LibTypes from './lib';
 
-const binding = nbind.init<typeof LibTypes>('dist/' + (process.env.EMSCRIPTEN ? 'asmjs' : 'native'));
+const platform = 'asmjs'; // (process.env.EMSCRIPTEN ? 'asmjs' : 'native');
+const binding = nbind.init<typeof LibTypes>('dist/' + platform);
 export const lib = binding.lib;
 
 export interface OnigCaptureIndex extends LibTypes.OnigCaptureIndex {

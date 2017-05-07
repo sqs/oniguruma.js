@@ -1,6 +1,6 @@
 {
   "name": "oniguruma",
-  "main": "./out/oniguruma.js",
+  "main": "./dist/src/oniguruma.js",
   "description": "oniguruma regular expression library",
   "version": "6.2.1",
   "licenses": [
