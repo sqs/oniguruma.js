@@ -73,11 +73,8 @@ NBIND_CLASS(OnigNextMatchResult)
 NBIND_CLASS(OnigScanner)
 {
   construct<std::vector<std::string>>();
-  method(FindNextMatch);
   method(FindNextMatchSync);
   method(CaptureIndicesForMatch);
-  method(ConvertUtf8OffsetToUtf16);
-  method(ConvertUtf16OffsetToUtf8);
 }
 
 #endif // NBIND_CLASS

@@ -2,6 +2,7 @@
 #define SRC_ONIG_STRING_H_
 
 #include <memory>
+#include <string>
 #include <stddef.h>
 
 using ::std::shared_ptr;

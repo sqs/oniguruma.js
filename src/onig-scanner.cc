@@ -1,5 +1,4 @@
 #include "onig-scanner.h"
-#include "onig-scanner-worker.h"
 
 OnigScanner::OnigScanner(std::vector<std::string> sources)
 {
@@ -21,10 +20,10 @@ OnigNextMatchResult *OnigScanner::FindNextMatchSync(OnigString *onigString, int 
   shared_ptr<OnigResult> bestResult = searcher->Search(onigString, startLocation);
   if (bestResult != NULL)
   {
-    OnigNextMatchResult result;
-    result.index = bestResult->Index();
-    result.captureIndices = CaptureIndicesForMatch(bestResult.get(), onigString);
-    return &result;
+    OnigNextMatchResult *result = new OnigNextMatchResult();
+    result->index = bestResult->Index();
+    result->captureIndices = CaptureIndicesForMatch(bestResult.get(), onigString);
+    return result;
   }
   return NULL;
 }
