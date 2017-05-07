@@ -4,11 +4,11 @@ import * as LibTypes from './lib';
 const binding = nbind.init<typeof LibTypes>('dist');
 export const lib = binding.lib;
 
-export interface OnigCaptureIndex extends LibTypes.OnigCaptureIndex {
+export class OnigCaptureIndex extends LibTypes.OnigCaptureIndex {
 	match?: string;
 }
 
-// binding.bind('OnigCaptureIndex', OnigCaptureIndex);
+binding.bind('OnigCaptureIndex', OnigCaptureIndex);
 
 export class OnigRegExp {
 	private scanner: OnigScanner;
