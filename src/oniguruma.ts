@@ -1,49 +1,13 @@
 import * as nbind from 'nbind';
 import * as LibTypes from './lib';
-
-// used only for asmjs
-declare var XMLHttpRequest: any;
-declare var require: any;
+import { init as asmjsInit } from './asmjs';
 
 const platform = 'asmjs'; // (process.env.EMSCRIPTEN ? 'asmjs' : 'native');
 let binding: nbind.Binding<typeof LibTypes>;
 if (nbind.init) {
 	binding = nbind.init<typeof LibTypes>('dist/' + platform);
 } else {
-	const emModule = {
-		// tslint:disable-next-line:ban-types
-		readAsync: function readAsync(url: string, onload: Function, onerror: Function) {
-			if (/\.mem$/.test(url)) {
-				onload(require('arraybuffer-loader!../asmjs/nbind.js.mem'));
-				return;
-			}
-
-			const xhr = new XMLHttpRequest();
-			xhr.open('GET', url, true);
-			xhr.responseType = 'arraybuffer';
-			xhr.onload = function xhr_onload() {
-				if (xhr.status === 200 || xhr.status === 0 && xhr.response) {
-					onload(xhr.response);
-				} else {
-					onerror();
-				}
-			}
-				;
-			xhr.onerror = onerror;
-			xhr.send(null);
-		},
-		//TOTAL_MEMORY: (16 * 1024 * 1024) * 2,
-	};
-	(nbind as any)(emModule, (err: any, binding2: any) => {
-		console.log('from nbind');
-		if (err) { console.log('nbind ERR', err); }
-		if (binding2) {
-			console.log('nbind BINDING', binding2);
-			// tslint:disable-next-line:no-debugger
-			//debugger;
-		}
-		binding = binding2;
-	});
+	binding = asmjsInit(nbind, {});
 }
 export const lib = binding.lib;
 
@@ -178,3 +142,5 @@ export class OnigString {
 	substring(start: number, end?: number): string { return this.value.substring(start, end); }
 	toString(): string { return this.value; }
 }
+
+binding.bind('OnigCaptureIndex', OnigCaptureIndexImpl);
