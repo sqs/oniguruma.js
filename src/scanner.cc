@@ -56,6 +56,7 @@ std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(OnigResult *re
 NBIND_CLASS(OnigCaptureIndex)
 {
   construct<>();
+  construct<const OnigCaptureIndex *>();
   getter(getIndex);
   getter(getStart);
   getter(getEnd);

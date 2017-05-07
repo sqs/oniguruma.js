@@ -4,6 +4,9 @@ export class OnigCaptureIndex extends NBindBase {
 	/** OnigCaptureIndex(); */
 	constructor();
 
+	/** OnigCaptureIndex(const OnigCaptureIndex *); */
+	constructor(p0: OnigCaptureIndex);
+
 	/** int32_t index; -- Read-only */
 	index: number;
 

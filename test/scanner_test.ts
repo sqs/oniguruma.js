@@ -52,10 +52,11 @@ describe('OnigScanner', () => {
 
 		it("returns false when the input string isn't a string", () => {
 			const scanner = new OnigScanner(['1']);
-			assert.equal((scanner.findNextMatchSync as any)(), null);
-			assert.equal((scanner.findNextMatchSync as any)(null), null);
-			assert.equal((scanner.findNextMatchSync as any)(2), null);
-			assert.equal((scanner.findNextMatchSync as any)(false), null);
+			assert.throws(() => (scanner.findNextMatchSync as any)(), /invalid value/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(null), /invalid value/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(undefined), /invalid value/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(2), /invalid value/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(false), /invalid value/);
 		});
 
 		it("uses 0 as the start position when the input start position isn't a valid number", () => {

@@ -4,11 +4,28 @@ import * as LibTypes from './lib';
 const binding = nbind.init<typeof LibTypes>('dist');
 export const lib = binding.lib;
 
-export class OnigCaptureIndex extends LibTypes.OnigCaptureIndex {
-	match?: string;
+export interface OnigCaptureIndex extends LibTypes.OnigCaptureIndex {
+	index: number;
+	start: number;
+	end: number;
+	length: number;
+	match?: string; // only populated by OnigRegExp.captureIndicesForMatch
 }
 
-binding.bind('OnigCaptureIndex', OnigCaptureIndex);
+class OnigCaptureIndexImpl implements LibTypes.OnigCaptureIndex {
+	constructor(
+		public index: number,
+		public start: number,
+		public end: number,
+		public length: number,
+	) { }
+
+	fromJS(output: (index: number, start: number, end: number, length: number) => void): void {
+		output(this.index, this.start, this.end, this.length);
+	}
+}
+
+binding.bind('OnigCaptureIndex', OnigCaptureIndexImpl);
 
 export class OnigRegExp {
 	private scanner: OnigScanner;
