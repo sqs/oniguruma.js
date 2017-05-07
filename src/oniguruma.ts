@@ -1,97 +1,67 @@
 import * as nbind from 'nbind';
 import * as LibTypes from './lib';
 
-export const lib = nbind.init<typeof LibTypes>('dist').lib;
+const binding = nbind.init<typeof LibTypes>('dist');
+export const lib = binding.lib;
 
-// export class OnigRegExp extends lib.OnigRegExp {
+export interface OnigCaptureIndex extends LibTypes.OnigCaptureIndex {
+	match?: string;
+}
 
-// }
+// binding.bind('OnigCaptureIndex', OnigCaptureIndex);
 
-// class OnigRegExp {
-// 	constructor(source) {
-// 		this.source = source.toString();
-// 		this.scanner = new OnigScanner([this.source]);
-// 	}
+export class OnigRegExp {
+	private scanner: OnigScanner;
 
-// 	captureIndicesForMatch(string, match) {
-// 		if (match) {
-// 			const { captureIndices } = match;
-// 			string = this.scanner.convertToString(string);
-// 			for (const capture of Array.from(captureIndices)) {
-// 				capture.match = string.slice(capture.start, capture.end);
-// 			}
-// 			return captureIndices;
-// 		} else {
-// 			return null;
-// 		}
-// 	}
+	constructor(source: string) {
+		this.scanner = new OnigScanner([source]);
+	}
 
-// 	searchSync(string, startPosition) {
-// 		if (startPosition == null) startPosition = 0;
-// 		const match = this.scanner.findNextMatchSync(string, startPosition);
-// 		return this.captureIndicesForMatch(string, match);
-// 	}
+	static captureIndicesForMatch(s: string | OnigString, match: LibTypes.OnigNextMatchResult): OnigCaptureIndex[] | null {
+		if (match) {
+			const { captureIndices }: { captureIndices: OnigCaptureIndex[] } = match;
+			const onigString = convertToOnigString(s);
+			for (const capture of Array.from(captureIndices)) {
+				capture.match = s.slice(capture.start, capture.end);
+			}
+			return captureIndices;
+		}
+		return null;
+	}
 
-// 	search(string, startPosition, callback) {
-// 		if (startPosition == null) { startPosition = 0; }
-// 		if (typeof startPosition === 'function') {
-// 			callback = startPosition;
-// 			startPosition = 0;
-// 		}
+	searchSync(s: string | OnigString, startPosition: number = 0): OnigCaptureIndex[] | null {
+		s = convertToOnigString(s);
+		const match = this.scanner.findNextMatchSync(s, startPosition);
+		if (match) { return OnigRegExp.captureIndicesForMatch(s, match); }
+		return null;
+	}
 
-// 		this.scanner.findNextMatch(string, startPosition, (error, match) => {
-// 			callback(error, this.captureIndicesForMatch(string, match));
-// 		});
-// 	}
+	testSync(s: string | OnigString) {
+		return this.searchSync(convertToOnigString(s)) != null;
+	}
+}
 
-// 	testSync(string) {
-// 		return this.searchSync(string) != null;
-// 	}
+export const OnigScanner: OnigScannerCtor = lib.OnigScanner as any;
 
-// 	test(string, callback) {
-// 		this.search(string, 0, (error, result) => callback(error, result != null));
-// 	}
-// }
+export interface OnigScannerCtor {
+	new (sources: string[]): OnigScanner;
+	prototype: OnigScanner;
+}
 
-// OnigScanner.prototype.findNextMatch = function (string, startPosition, callback) {
-// 	if (startPosition == null) startPosition = 0;
-// 	if (typeof startPosition === 'function') {
-// 		callback = startPosition;
-// 		startPosition = 0;
-// 	}
+export interface OnigScanner extends LibTypes.OnigScanner {
+	findNextMatchSync(s: string | OnigString, startPosition: number): LibTypes.OnigNextMatchResult | null;
+}
 
-// 	string = this.convertToString(string);
-// 	startPosition = this.convertToNumber(startPosition);
+// tslint:disable-next-line:space-before-function-paren
+OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, startPosition: number = 0): LibTypes.OnigNextMatchResult | null {
+	return this.FindNextMatchSync(convertToOnigString(s), startPosition);
+};
 
-// 	this._findNextMatch(string, startPosition, (error, match) => {
-// 		if (match) match.scanner = this;
-// 		return callback(error, match);
-// 	});
-// };
-
-// OnigScanner.prototype.findNextMatchSync = function (string, startPosition) {
-// 	if (startPosition == null) { startPosition = 0; }
-// 	string = this.convertToString(string);
-// 	startPosition = this.convertToNumber(startPosition);
-
-// 	const match = this._findNextMatchSync(string, startPosition);
-// 	if (match) match.scanner = this;
-// 	return match;
-// };
-
-// OnigScanner.prototype.convertToString = function (value) {
-// 	if (value === undefined) return 'undefined';
-// 	if (value === null) return 'null';
-// 	if (value.constructor === OnigString) return value;
-// 	return value.toString();
-// };
-
-// OnigScanner.prototype.convertToNumber = function (value) {
-// 	value = parseInt(value);
-// 	if (!isFinite(value)) { value = 0; }
-// 	value = Math.max(value, 0);
-// 	return value;
-// };
+function convertToOnigString(value: any): OnigString {
+	if (value instanceof OnigString) { return value; }
+	if (typeof value === 'string') { return new OnigString(value); }
+	throw new Error('convertToOnigString: invalid value: ' + value);
+}
 
 export const OnigString: OnigStringCtor = lib.OnigString as any;
 
@@ -102,6 +72,7 @@ export interface OnigStringCtor {
 
 export interface OnigString extends LibTypes.OnigString {
 	length: number;
+	slice(start?: number, end?: number): string;
 	substring(start: number, end?: number): string;
 	toString(): string;
 }
@@ -116,8 +87,13 @@ Object.defineProperty(OnigString.prototype, 'length', {
 });
 
 // tslint:disable-next-line:space-before-function-paren
+OnigString.prototype.slice = function (start?: number, end?: number): string {
+	return this.toString().slice(start, end);
+};
+
+// tslint:disable-next-line:space-before-function-paren
 OnigString.prototype.substring = function (start: number, end?: number): string {
-	return this.utf8_value()!.substring(start, end);
+	return this.toString().substring(start, end);
 };
 
 // tslint:disable-next-line:space-before-function-paren
