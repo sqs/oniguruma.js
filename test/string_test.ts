@@ -24,6 +24,6 @@ describe('OnigString', () => {
 	});
 
 	it('handles invalid arguments', () => {
-		assert.equal((OnigString as any)(undefined).toString(), 'undefined');
+		assert.throws(() => (OnigString as any)(undefined).toString(), /invalid non-string value/);
 	});
 });

@@ -47,14 +47,13 @@ export class OnigRegExp {
 	}
 
 	searchSync(s: string | OnigString, startPosition: number = 0): OnigCaptureIndex[] | null {
-		s = convertToOnigString(s);
 		const match = this.scanner.findNextMatchSync(s, startPosition);
 		if (match) { return OnigRegExp.captureIndicesForMatch(s, match); }
 		return null;
 	}
 
 	testSync(s: string | OnigString) {
-		return this.searchSync(convertToOnigString(s)) != null;
+		return this.searchSync(s) != null;
 	}
 }
 
@@ -81,46 +80,43 @@ function convertToPositiveCountableInteger(value: any): number {
 	return value;
 }
 
-function convertToOnigString(value: any): OnigString {
-	if (value instanceof OnigString) { return value; }
-	if (typeof value === 'string') { return new OnigString(value); }
+function convertToOnigString(value: any): LibTypes.OnigString {
+	if (value instanceof OnigString) { return getOnigStringPointer(value); }
+	if (typeof value === 'string') { return getOnigStringPointer(new OnigString(value)); }
 	throw new Error('convertToOnigString: invalid value: ' + value);
 }
 
-export const OnigString: OnigStringCtor = lib.OnigString as any;
-
-export interface OnigStringCtor {
-	new (s: string): OnigString;
-	prototype: OnigString;
+/**
+ * getOnigStringPointer returns an OnigString's C pointer. The pointer field is
+ * intentionally private in the exported class definition.
+ */
+function getOnigStringPointer(s: OnigString): LibTypes.OnigString {
+	return (s as any).ptr;
 }
 
-export interface OnigString extends LibTypes.OnigString {
-	length: number;
-	slice(start?: number, end?: number): string;
-	substring(start: number, end?: number): string;
-	toString(): string;
+export class OnigString {
+	private ptr: LibTypes.OnigString;
+
+	constructor(private value: string) {
+		if (typeof value !== 'string') {
+			throw new Error('OnigString: invalid non-string value of type ' + typeof value);
+		}
+		this.ptr = new lib.OnigString(value);
+	}
+
+	// $str is the (private, undocumented) property name used by
+	// node-oniguruma. Reuse it so this class's instances are compatible.
+	get $str(): string { return this.value; }
+	set $str(_value: string) {
+		if (this.value !== _value) {
+			throw new Error('OnigString: unable to update immutable value');
+		}
+	}
+
+	get length(): number { return this.value.length; }
+	slice(start?: number, end?: number): string { return this.value.slice(start, end); }
+	substring(start: number, end?: number): string { return this.value.substring(start, end); }
+	toString(): string { return this.value; }
 }
 
-Object.defineProperty(OnigString.prototype, 'length', {
-	// tslint:disable-next-line:object-literal-shorthand space-before-function-paren
-	get: function (this: OnigString): number {
-		return this.utf8_length();
-	},
-	configurable: true,
-	enumerable: true,
-});
-
-// tslint:disable-next-line:space-before-function-paren
-OnigString.prototype.slice = function (start?: number, end?: number): string {
-	return this.toString().slice(start, end);
-};
-
-// tslint:disable-next-line:space-before-function-paren
-OnigString.prototype.substring = function (start: number, end?: number): string {
-	return this.toString().substring(start, end);
-};
-
-// tslint:disable-next-line:space-before-function-paren
-OnigString.prototype.toString = function (): string {
-	return this.utf8_value()!;
-};
+binding.bind('OnigString', OnigString);
