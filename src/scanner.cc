@@ -65,6 +65,7 @@ NBIND_CLASS(OnigCaptureIndex)
 NBIND_CLASS(OnigNextMatchResult)
 {
   construct<>();
+  construct<const OnigNextMatchResult *>();
   getter(getIndex);
   getter(getCaptureIndices);
 }

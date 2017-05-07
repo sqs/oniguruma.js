@@ -38,11 +38,19 @@ class OnigNextMatchResult
 {
 public:
   OnigNextMatchResult(){};
+  explicit OnigNextMatchResult(const OnigNextMatchResult *other)
+      : index(other->index), captureIndices(other->captureIndices){};
+
   int index;
   std::vector<OnigCaptureIndex> captureIndices;
 
   int getIndex() { return index; }
   std::vector<OnigCaptureIndex> getCaptureIndices() { return captureIndices; }
+
+  void toJS(nbind::cbOutput output)
+  {
+    output(index, captureIndices);
+  }
 };
 
 class OnigScanner

@@ -24,6 +24,9 @@ export class OnigNextMatchResult extends NBindBase {
 	/** OnigNextMatchResult(); */
 	constructor();
 
+	/** OnigNextMatchResult(const OnigNextMatchResult *); */
+	constructor(p0: OnigNextMatchResult);
+
 	/** int32_t index; -- Read-only */
 	index: number;
 

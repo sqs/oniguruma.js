@@ -27,6 +27,17 @@ class OnigCaptureIndexImpl implements LibTypes.OnigCaptureIndex {
 
 binding.bind('OnigCaptureIndex', OnigCaptureIndexImpl);
 
+class OnigNextMatchResult implements LibTypes.OnigNextMatchResult {
+	constructor(
+		public index: number,
+		public captureIndices: LibTypes.OnigCaptureIndex[],
+	) { }
+
+	fromJS(output: (index: number, captureIndices: LibTypes.OnigCaptureIndex[]) => void): void {
+		output(this.index, this.captureIndices);
+	}
+}
+
 export class OnigRegExp {
 	private scanner: OnigScanner;
 
