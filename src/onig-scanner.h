@@ -1,41 +1,85 @@
 #ifndef SRC_ONIG_SCANNER_H_
 #define SRC_ONIG_SCANNER_H_
 
+#include <memory>
 #include "nan.h"
 #include "onig-string.h"
 #include "onig-result.h"
 #include "onig-reg-exp.h"
 #include "onig-searcher.h"
-
-using ::v8::Array;
-using ::v8::Function;
-using ::v8::Local;
-using ::v8::Number;
-using ::v8::Object;
-using ::v8::String;
-using ::v8::Value;
+#include "nbind/api.h"
+#include "nbind/nbind.h"
 
 using ::std::shared_ptr;
 using ::std::vector;
 
-class OnigScanner : public node::ObjectWrap {
- public:
-  static void Init(Local<Object> target);
+class OnigCaptureIndex
+{
+public:
+  OnigCaptureIndex();
+  int index;
+  int start;
+  int end;
+  int length;
 
- private:
-  static NAN_METHOD(New);
-  static NAN_METHOD(FindNextMatch);
-  static NAN_METHOD(FindNextMatchSync);
-  explicit OnigScanner(Local<Array> sources);
+  int getIndex() { return index; }
+  int getStart() { return start; }
+  int getEnd() { return end; }
+  int getLength() { return length; }
+};
+
+class OnigNextMatchResult
+{
+public:
+  OnigNextMatchResult();
+  int index;
+  std::vector<OnigCaptureIndex> captureIndices;
+
+  int getIndex() { return index; }
+  std::vector<OnigCaptureIndex> getCaptureIndices() { return captureIndices; }
+};
+
+class OnigScanner
+{
+public:
+  OnigScanner(std::vector<string> sources);
   ~OnigScanner();
+  OnigNextMatchResult *FindNextMatchSync(OnigString *onigString, int startLocation);
+  static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(OnigResult *result, OnigString *source);
 
-  void FindNextMatch(Local<String> v8String, Local<Number> v8StartLocation, Local<Function> v8Callback);
-  Local<Value> FindNextMatchSync(OnigString* onigString, Local<Number> v8StartLocation);
-  Local<Value> FindNextMatchSync(Local<String> v8String, Local<Number> v8StartLocation);
-  static Local<Value> CaptureIndicesForMatch(OnigResult* result, OnigString* source);
-
+private:
   vector<shared_ptr<OnigRegExp>> regExps;
   shared_ptr<OnigSearcher> searcher;
 };
 
-#endif  // SRC_ONIG_SCANNER_H_
+#ifdef NBIND_CLASS
+
+NBIND_CLASS(OnigCaptureIndex)
+{
+  construct<>();
+  getter(getIndex);
+  getter(getStart);
+  getter(getEnd);
+  getter(getLength);
+}
+
+NBIND_CLASS(OnigNextMatchResult)
+{
+  construct<>();
+  getter(getIndex);
+  getter(getCaptureIndices);
+}
+
+NBIND_CLASS(OnigScanner)
+{
+  construct<std::vector<std::string>>();
+  method(FindNextMatch);
+  method(FindNextMatchSync);
+  method(CaptureIndicesForMatch);
+  method(ConvertUtf8OffsetToUtf16);
+  method(ConvertUtf16OffsetToUtf8);
+}
+
+#endif // NBIND_CLASS
+
+#endif // SRC_ONIG_SCANNER_H_

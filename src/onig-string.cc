@@ -1,11 +1,8 @@
 #include "onig-string.h"
 
-class OnigString {
-  
-public:
-
-  OnigString(std::string value)
-	: utf8Value(value), utf8_length_(utf8Value.length()) {
+OnigString::OnigString(std::string value)
+		: utf8Value(value), utf8_length_(utf8Value.length())
+{
 	static int idGenerator = 0;
 	uniqueId_ = ++idGenerator;
 
@@ -69,38 +66,47 @@ public:
 	  }
 	}
 	*/
-  }
+}
 
-  ~OnigString() {
-	if (hasMultiByteChars) {
-	  delete []utf16OffsetToUtf8;
-	  delete []utf8OffsetToUtf16;
+OnigString::~OnigString()
+{
+	if (hasMultiByteChars)
+	{
+		delete[] utf16OffsetToUtf8;
+		delete[] utf8OffsetToUtf16;
 	}
-  }
+}
 
-  int ConvertUtf8OffsetToUtf16(int utf8Offset) {
-	if (hasMultiByteChars) {
-	  if (utf8Offset < 0) {
-		return 0;
-	  }
-	  if ((size_t)utf8Offset > utf8_length_) {
-		return utf16_length_;
-	  }
-	  return utf8OffsetToUtf16[utf8Offset];
+int OnigString::ConvertUtf8OffsetToUtf16(int utf8Offset)
+{
+	if (hasMultiByteChars)
+	{
+		if (utf8Offset < 0)
+		{
+			return 0;
+		}
+		if ((size_t)utf8Offset > utf8_length_)
+		{
+			return utf16_length_;
+		}
+		return utf8OffsetToUtf16[utf8Offset];
 	}
 	return utf8Offset;
-  }
+}
 
-  int ConvertUtf16OffsetToUtf8(int utf16Offset) {
-	if (hasMultiByteChars) {
-	  if (utf16Offset < 0) {
-		return 0;
-	  }
-	  if ((size_t)utf16Offset > utf16_length_) {
-		return utf8_length_;
-	  }
-	  return utf16OffsetToUtf8[utf16Offset];
+int OnigString::ConvertUtf16OffsetToUtf8(int utf16Offset)
+{
+	if (hasMultiByteChars)
+	{
+		if (utf16Offset < 0)
+		{
+			return 0;
+		}
+		if ((size_t)utf16Offset > utf16_length_)
+		{
+			return utf8_length_;
+		}
+		return utf16OffsetToUtf8[utf16Offset];
 	}
 	return utf16Offset;
-  }
 }
