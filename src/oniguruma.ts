@@ -118,5 +118,3 @@ export class OnigString {
 	substring(start: number, end?: number): string { return this.value.substring(start, end); }
 	toString(): string { return this.value; }
 }
-
-binding.bind('OnigString', OnigString);
