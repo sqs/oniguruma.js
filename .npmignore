@@ -1,5 +1,4 @@
 /build
-.pairs
 *.a
 *.o
 *.lo

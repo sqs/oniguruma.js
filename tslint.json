@@ -35,6 +35,9 @@
         "ordered-imports": [
             false
         ],
+        "quotemark": [
+            "single"
+        ],
         "variable-name": [
             true,
             "check-format",
