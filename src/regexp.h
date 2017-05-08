@@ -15,7 +15,7 @@ public:
   explicit OnigRegExp(const std::string &source);
   ~OnigRegExp();
 
-  shared_ptr<OnigResult> Search(OnigString *str, int position);
+  shared_ptr<OnigResult> Search(OnigString &str, int position);
 
 private:
   OnigRegExp(const OnigRegExp &);            // Disallow copying

@@ -1,10 +1,17 @@
 #include "./result.h"
+#include <stdio.h>
+
+static int ONIGRESULTS = 0;
 
 OnigResult::OnigResult(OnigRegion *region, int indexInScanner)
-    : region_(region), indexInScanner(indexInScanner) {}
+    : region_(region), indexInScanner(indexInScanner)
+{
+  printf("+++ OnigResult: %d\n", ++ONIGRESULTS);
+}
 
 OnigResult::~OnigResult()
 {
+  printf("--- OnigResult: %d\n", --ONIGRESULTS);
   onig_region_free(region_, 1);
 }
 

@@ -8,7 +8,7 @@ if (nbind.init) {
 	binding = nbind.init<typeof LibTypes>('dist/' + platform);
 } else {
 	binding = asmjsInit(nbind, {
-		TOTAL_MEMORY: 16 * 1024 * 1024 * 8,
+		TOTAL_MEMORY: 16 * 1024 * 1024,
 	});
 }
 export const lib = binding.lib;
@@ -48,6 +48,8 @@ class OnigNextMatchResult implements LibTypes.OnigNextMatchResult {
 }
 
 export class OnigRegExp {
+	// TODO(sqs): Call OnigString.prototype.free when needed for OnigStrings owned by this class.
+
 	private scanner: OnigScanner;
 
 	constructor(source: string) {
@@ -91,14 +93,20 @@ export interface OnigScanner extends LibTypes.OnigScanner {
 	// vscode-textmate's oniguruma.d.ts wants to call _findNextMatchSync (with an
 	// underscore) for some reason.
 	_findNextMatchSync(s: string | OnigString, startPosition: number): LibTypes.OnigNextMatchResult | null;
+
+	dispose(): void;
 }
 
 // tslint:disable-next-line:space-before-function-paren
 OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, startPosition: number = 0): LibTypes.OnigNextMatchResult | null {
-	return this.FindNextMatchSync(convertToOnigString(s) as any, convertToPositiveCountableInteger(startPosition));
+	const os = convertToOnigString(s) as any;
+	const result = this.FindNextMatchSync(os, convertToPositiveCountableInteger(startPosition));
+	if (typeof s === 'string') { os.free(); }
+	return result;
 };
 
 OnigScanner.prototype._findNextMatchSync = OnigScanner.prototype.findNextMatchSync;
+OnigScanner.prototype.dispose = OnigScanner.prototype.free!;
 
 function convertToPositiveCountableInteger(value: any): number {
 	value = parseInt(value, 10);
@@ -124,6 +132,7 @@ export interface OnigString extends LibTypes.OnigString {
 	slice(start?: number, end?: number): string;
 	substring(start: number, end?: number): string;
 	toString(): string;
+	dispose(): void;
 }
 
 Object.defineProperty(lib.OnigString.prototype, 'length', {
@@ -144,5 +153,6 @@ OnigString.prototype.substring = function (this: OnigString, start: number, end?
 OnigString.prototype.toString = function (this: OnigString): string {
 	return this.utf8_value()!;
 };
+OnigString.prototype.dispose = OnigString.prototype.free!;
 
 // binding.bind('OnigString', OnigString);

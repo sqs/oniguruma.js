@@ -32,6 +32,10 @@ public:
   {
     output(index, start, end, length);
   }
+
+private:
+  //OnigCaptureIndex(const OnigCaptureIndex &) = delete;            // Disallow copying
+  //OnigCaptureIndex &operator=(const OnigCaptureIndex &) = delete; // Disallow copying
 };
 
 class OnigNextMatchResult
@@ -40,6 +44,7 @@ public:
   OnigNextMatchResult(){};
   explicit OnigNextMatchResult(const OnigNextMatchResult *other)
       : index(other->index), captureIndices(other->captureIndices){};
+  ~OnigNextMatchResult();
 
   int index;
   std::vector<OnigCaptureIndex> captureIndices;
@@ -51,19 +56,25 @@ public:
   {
     output(index, captureIndices);
   }
+
+private:
+  //OnigNextMatchResult(const OnigNextMatchResult &) = delete;            // Disallow copying
+  //OnigNextMatchResult &operator=(const OnigNextMatchResult &) = delete; // Disallow copying
 };
 
 class OnigScanner
 {
 public:
   OnigScanner(std::vector<std::string> sources);
-  ~OnigScanner();
-  OnigNextMatchResult *FindNextMatchSync(OnigString onigString, int startLocation);
-  static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(OnigResult *result, OnigString *source);
+  OnigNextMatchResult *FindNextMatchSync(OnigString &onigString, int startLocation);
+  static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(OnigResult *result, OnigString &source);
 
 private:
   vector<shared_ptr<OnigRegExp>> regExps;
   shared_ptr<OnigSearcher> searcher;
+
+  OnigScanner(const OnigScanner &) = delete;            // Disallow copying
+  OnigScanner &operator=(const OnigScanner &) = delete; // Disallow copying
 };
 
 #endif // SRC_ONIG_SCANNER_H_

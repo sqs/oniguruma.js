@@ -21,17 +21,20 @@ OnigRegExp::OnigRegExp(const std::string &source)
     onig_error_code_to_str(errorString, status, &error);
     NBIND_ERR(reinterpret_cast<char *>(errorString));
   }
+
+  //printf("OnigRegExp::OnigRegExp\n");
 }
 
 OnigRegExp::~OnigRegExp()
 {
+  //printf("~OnigRegExp: %d\n");
   if (regex_)
     onig_free(regex_);
 }
 
-shared_ptr<OnigResult> OnigRegExp::Search(OnigString *str, int position)
+shared_ptr<OnigResult> OnigRegExp::Search(OnigString &str, int position)
 {
-  if (lastSearchStrUniqueId == str->uniqueId() && lastSearchPosition <= position)
+  if (lastSearchStrUniqueId == str.uniqueId() && lastSearchPosition <= position)
   {
     if (lastSearchResult == NULL || lastSearchResult->LocationAt(0) >= position)
     {
@@ -39,9 +42,9 @@ shared_ptr<OnigResult> OnigRegExp::Search(OnigString *str, int position)
     }
   }
 
-  lastSearchStrUniqueId = str->uniqueId();
+  lastSearchStrUniqueId = str.uniqueId();
   lastSearchPosition = position;
-  lastSearchResult = DoSearch(str->utf8_value(), position, str->utf8_length());
+  lastSearchResult = DoSearch(str.utf8_value(), position, str.utf8_length());
   return lastSearchResult;
 }
 

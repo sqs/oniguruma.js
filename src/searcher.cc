@@ -1,8 +1,8 @@
 #include "./searcher.h"
 
-shared_ptr<OnigResult> OnigSearcher::Search(OnigString *source, int charOffset)
+shared_ptr<OnigResult> OnigSearcher::Search(OnigString &source, int charOffset)
 {
-  int byteOffset = source->ConvertUtf16OffsetToUtf8(charOffset);
+  int byteOffset = source.ConvertUtf16OffsetToUtf8(charOffset);
 
   int bestLocation = 0;
   shared_ptr<OnigResult> bestResult;

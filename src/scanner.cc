@@ -13,22 +13,20 @@ OnigScanner::OnigScanner(std::vector<std::string> sources)
   searcher = shared_ptr<OnigSearcher>(new OnigSearcher(regExps));
 }
 
-OnigScanner::~OnigScanner() {}
-
-OnigNextMatchResult *OnigScanner::FindNextMatchSync(OnigString onigString, int startLocation)
+OnigNextMatchResult *OnigScanner::FindNextMatchSync(OnigString &onigString, int startLocation)
 {
-  shared_ptr<OnigResult> bestResult = searcher->Search(&onigString, startLocation);
+  shared_ptr<OnigResult> bestResult = searcher->Search(onigString, startLocation);
   if (bestResult != NULL)
   {
     OnigNextMatchResult *result = new OnigNextMatchResult();
     result->index = bestResult->Index();
-    result->captureIndices = CaptureIndicesForMatch(bestResult.get(), &onigString);
+    result->captureIndices = CaptureIndicesForMatch(bestResult.get(), onigString);
     return result;
   }
   return NULL;
 }
 
-std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(OnigResult *result, OnigString *source)
+std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(OnigResult *result, OnigString &source)
 {
   int resultCount = result->Count();
   std::vector<OnigCaptureIndex> captures;
@@ -36,8 +34,8 @@ std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(OnigResult *re
 
   for (int index = 0; index < resultCount; index++)
   {
-    int captureStart = source->ConvertUtf8OffsetToUtf16(result->LocationAt(index));
-    int captureEnd = source->ConvertUtf8OffsetToUtf16(result->LocationAt(index) + result->LengthAt(index));
+    int captureStart = source.ConvertUtf8OffsetToUtf16(result->LocationAt(index));
+    int captureEnd = source.ConvertUtf8OffsetToUtf16(result->LocationAt(index) + result->LengthAt(index));
 
     OnigCaptureIndex capture;
     capture.index = index;
@@ -48,6 +46,11 @@ std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(OnigResult *re
   }
 
   return captures;
+}
+
+OnigNextMatchResult::~OnigNextMatchResult()
+{
+  printf("OnigNextMatchResult destructor\n");
 }
 
 #include "nbind/nbind.h"

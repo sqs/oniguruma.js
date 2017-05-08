@@ -16,7 +16,7 @@ public:
   void SetIndex(int newIndex) { indexInScanner = newIndex; }
 
 private:
-  OnigResult(const OnigResult &);            // Disallow copying
+  OnigResult(const OnigResult &) = delete;   // Disallow copying
   OnigResult &operator=(const OnigResult &); // Disallow copying
 
   OnigRegion *region_;

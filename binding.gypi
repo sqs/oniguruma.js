@@ -105,10 +105,10 @@
         }],
 
         ['asmjs==1', {
-            #'cflags': ['-O0', '--memory-init-file', '0', '-g4'],
-            #'ldflags': ['-O0', '--memory-init-file', '0', '-g4'],
-            'cflags': ['-O3', '--memory-init-file', '0'],
-            'ldflags': ['-O3', '--memory-init-file', '0'],
+            'cflags': ['-O0', '--memory-init-file', '0', '-g4'],
+            'ldflags': ['-O0', '--memory-init-file', '0', '-g4'],
+            #'cflags': ['-O3', '--memory-init-file', '0'],
+            #'ldflags': ['-O3', '--memory-init-file', '0'],
         }],
     ]
 }
