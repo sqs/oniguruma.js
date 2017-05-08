@@ -12,13 +12,6 @@ describe('OnigScanner', () => {
 			assert.equal(scanner.findNextMatchSync('xxaxxbxxc', 9), null);
 		});
 
-		// TODO(sqs): This behavior differs from node-oniguruma. Is this OK?
-		//
-		// it('includes the scanner with the results', () => {
-		// 	const scanner = new OnigScanner(['a']);
-		// 	assert.equal(scanner.findNextMatchSync('a', 0).scanner, scanner);
-		// });
-
 		describe('when the string searched contains unicode characters', () =>
 			it('returns the correct matching pattern', () => {
 				let scanner = new OnigScanner(['1', '2']);
@@ -52,11 +45,11 @@ describe('OnigScanner', () => {
 
 		it("returns false when the input string isn't a string", () => {
 			const scanner = new OnigScanner(['1']);
-			assert.throws(() => (scanner.findNextMatchSync as any)(), /invalid value/);
-			assert.throws(() => (scanner.findNextMatchSync as any)(null), /invalid value/);
-			assert.throws(() => (scanner.findNextMatchSync as any)(undefined), /invalid value/);
-			assert.throws(() => (scanner.findNextMatchSync as any)(2), /invalid value/);
-			assert.throws(() => (scanner.findNextMatchSync as any)(false), /invalid value/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(), /Type mismatch/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(null), /Type mismatch/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(undefined), /Type mismatch/);
+			assert.equal((scanner.findNextMatchSync as any)(2), null);
+			assert.equal((scanner.findNextMatchSync as any)(false), null);
 		});
 
 		it("uses 0 as the start position when the input start position isn't a valid number", () => {

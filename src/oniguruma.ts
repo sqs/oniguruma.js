@@ -109,7 +109,7 @@ function convertToPositiveCountableInteger(value: any): number {
 
 function convertToOnigString(value: any): OnigString {
 	if (value instanceof OnigString) { return value; }
-	return new OnigString(value);
+	return new OnigString(value ? value.toString() : value);
 }
 
 export const OnigString: OnigStringCtor = lib.OnigString as any;
