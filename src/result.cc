@@ -6,12 +6,20 @@ static int ONIGRESULTS = 0;
 OnigResult::OnigResult(OnigRegion *region, int indexInScanner)
     : region_(region), indexInScanner(indexInScanner)
 {
-  printf("+++ OnigResult: %d\n", ++ONIGRESULTS);
+  ++ONIGRESULTS;
+  if (ONIGRESULTS == 1 || ONIGRESULTS % 10 == 0)
+  {
+    // printf("+++ OnigResult: %d\n", ONIGRESULTS);
+  }
 }
 
 OnigResult::~OnigResult()
 {
-  printf("--- OnigResult: %d\n", --ONIGRESULTS);
+  --ONIGRESULTS;
+  if (ONIGRESULTS == 0 || ONIGRESULTS % 3 == 0)
+  {
+    // printf("--- OnigResult: %d\n", ONIGRESULTS);
+  }
   onig_region_free(region_, 1);
 }
 

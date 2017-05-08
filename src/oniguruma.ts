@@ -8,7 +8,7 @@ if (nbind.init) {
 	binding = nbind.init<typeof LibTypes>('dist/' + platform);
 } else {
 	binding = asmjsInit(nbind, {
-		TOTAL_MEMORY: 16 * 1024 * 1024,
+		TOTAL_MEMORY: 16 * 1024 * 1024 * 3, // remove this comment
 	});
 }
 export const lib = binding.lib;
