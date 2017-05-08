@@ -71,11 +71,8 @@ export class OnigScanner extends NBindBase {
 }
 
 export class OnigString extends NBindBase {
-	/** OnigString(std::string, int32_t); */
-	constructor(p0: string, p1: number);
-
-	/** OnigString(const OnigString *); */
-	constructor(p0: OnigString);
+	/** OnigString(std::string); */
+	constructor(p0: string);
 
 	/** int32_t uniqueId(); */
 	uniqueId(): number;
@@ -83,7 +80,7 @@ export class OnigString extends NBindBase {
 	/** const char * utf8_value(); */
 	utf8_value(): string | null;
 
-	/** uint32_t utf8_length(); */
+	/** uint64_t utf8_length(); */
 	utf8_length(): number;
 
 	/** int32_t ConvertUtf8OffsetToUtf16(int32_t); */

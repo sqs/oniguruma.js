@@ -109,35 +109,41 @@ function convertToPositiveCountableInteger(value: any): number {
 
 function convertToOnigString(value: any): OnigString {
 	if (value instanceof OnigString) { return value; }
-	if (typeof value === 'string') { return new OnigString(value, 0); }
+	if (typeof value === 'string') { return new OnigString(value); }
 	throw new Error('convertToOnigString: invalid value: ' + value);
 }
 
-export class OnigString {
-	constructor(private value: string, x: number = 0) {
-		if (typeof value !== 'string') {
-			throw new Error('OnigString: invalid non-string value of type ' + typeof value);
-		}
-	}
+export const OnigString: OnigStringCtor = lib.OnigString as any;
 
-	// $str is the (private, undocumented) property name used by
-	// node-oniguruma. Reuse it so this class's instances are compatible.
-	get $str(): string { return this.value; }
-	set $str(_value: string) {
-		if (this.value !== _value) {
-			throw new Error('OnigString: unable to update immutable value');
-		}
-	}
-
-	get length(): number { return this.value.length; }
-	slice(start?: number, end?: number): string { return this.value.slice(start, end); }
-	substring(start: number, end?: number): string { return this.value.substring(start, end); }
-	toString(): string { return this.value; }
-
-	fromJS(output: (value: string, x: number) => void): void {
-		console.count('OnigString fromJS');
-		output(this.value, 0);
-	}
+export interface OnigStringCtor {
+	new (value: string): OnigString;
+	prototype: OnigString;
 }
 
-binding.bind('OnigString', OnigString);
+export interface OnigString extends LibTypes.OnigString {
+	length: number;
+	slice(start?: number, end?: number): string;
+	substring(start: number, end?: number): string;
+	toString(): string;
+}
+
+Object.defineProperty(lib.OnigString.prototype, 'length', {
+	// tslint:disable-next-line:object-literal-shorthand space-before-function-paren
+	get: function (this: OnigString): number {
+		return this.utf8_length();
+	},
+});
+// tslint:disable-next-line:space-before-function-paren
+OnigString.prototype.slice = function (this: OnigString, start?: number, end?: number): string {
+	return this.toString().slice(start, end);
+};
+// tslint:disable-next-line:space-before-function-paren
+OnigString.prototype.substring = function (this: OnigString, start: number, end?: number): string {
+	return this.toString().substring(start, end);
+};
+// tslint:disable-next-line:space-before-function-paren
+OnigString.prototype.toString = function (this: OnigString): string {
+	return this.utf8_value()!;
+};
+
+// binding.bind('OnigString', OnigString);
