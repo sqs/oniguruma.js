@@ -42,31 +42,16 @@ export class OnigRegExp extends NBindBase {
 	Search(p0: OnigString, p1: number): OnigResult | null;
 }
 
-export class OnigResult extends NBindBase {
-	/** int32_t Count(); */
-	Count(): number;
-
-	/** int32_t LocationAt(int32_t); */
-	LocationAt(p0: number): number;
-
-	/** int32_t LengthAt(int32_t); */
-	LengthAt(p0: number): number;
-
-	/** int32_t Index(); */
-	Index(): number;
-
-	/** void SetIndex(int32_t); */
-	SetIndex(p0: number): void;
-}
+export class OnigResult extends NBindBase {}
 
 export class OnigScanner extends NBindBase {
 	/** OnigScanner(std::vector<std::string>); */
 	constructor(p0: string[]);
 
-	/** OnigNextMatchResult * FindNextMatchSync(OnigString &, int32_t); */
+	/** std::shared_ptr<OnigNextMatchResult> FindNextMatchSync(OnigString &, int32_t); */
 	FindNextMatchSync(p0: OnigString, p1: number): OnigNextMatchResult | null;
 
-	/** static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(OnigResult *, OnigString &); */
+	/** static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(std::shared_ptr<OnigResult>, OnigString &); */
 	static CaptureIndicesForMatch(p0: OnigResult, p1: OnigString): OnigCaptureIndex[];
 }
 

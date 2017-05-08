@@ -8,7 +8,7 @@ if (nbind.init) {
 	binding = nbind.init<typeof LibTypes>('dist/' + platform);
 } else {
 	binding = asmjsInit(nbind, {
-		TOTAL_MEMORY: 16 * 1024 * 1024 * 3, // remove this comment
+		TOTAL_MEMORY: 16 * 1024 * 1024 * 1,
 	});
 }
 export const lib = binding.lib;
@@ -28,10 +28,6 @@ class OnigCaptureIndexImpl implements LibTypes.OnigCaptureIndex {
 		public end: number,
 		public length: number,
 	) { }
-
-	fromJS(output: (index: number, start: number, end: number, length: number) => void): void {
-		output(this.index, this.start, this.end, this.length);
-	}
 }
 
 binding.bind('OnigCaptureIndex', OnigCaptureIndexImpl);
@@ -41,10 +37,6 @@ class OnigNextMatchResult implements LibTypes.OnigNextMatchResult {
 		public index: number,
 		public captureIndices: LibTypes.OnigCaptureIndex[],
 	) { }
-
-	fromJS(output: (index: number, captureIndices: LibTypes.OnigCaptureIndex[]) => void): void {
-		output(this.index, this.captureIndices);
-	}
 }
 
 export class OnigRegExp {
@@ -102,6 +94,9 @@ OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, star
 	const os = convertToOnigString(s) as any;
 	const result = this.FindNextMatchSync(os, convertToPositiveCountableInteger(startPosition));
 	if (typeof s === 'string') { os.free(); }
+	if (result) {
+		result.free!();
+	}
 	return result;
 };
 

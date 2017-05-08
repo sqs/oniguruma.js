@@ -45,3 +45,11 @@ int OnigResult::LengthAt(int index)
   else
     return 0;
 }
+
+#include "nbind/nbind.h"
+
+#ifdef NBIND_CLASS
+NBIND_CLASS(OnigResult)
+{
+}
+#endif // NBIND_CLASS

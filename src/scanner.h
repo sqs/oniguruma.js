@@ -11,12 +11,28 @@
 using ::std::shared_ptr;
 using ::std::vector;
 
+static int CAPIDX = 0;
+static int NMR = 0;
+
 class OnigCaptureIndex
 {
 public:
-  OnigCaptureIndex(){};
+  OnigCaptureIndex()
+  {
+    ++CAPIDX;
+    //printf("+++ OnigCaptureIndex: %d\n", CAPIDX);
+  };
   explicit OnigCaptureIndex(const OnigCaptureIndex *other)
-      : index(other->index), start(other->start), end(other->end), length(other->length){};
+      : index(other->index), start(other->start), end(other->end), length(other->length)
+  {
+    ++CAPIDX;
+    //printf("+++ OnigCaptureIndex: %d\n", CAPIDX);
+  };
+  ~OnigCaptureIndex()
+  {
+    --CAPIDX;
+    //printf("--- OnigCaptureIndex: %d\n", CAPIDX);
+  }
 
   int index;
   int start;
@@ -41,10 +57,22 @@ private:
 class OnigNextMatchResult
 {
 public:
-  OnigNextMatchResult(){};
+  OnigNextMatchResult()
+  {
+    ++NMR;
+    //printf("+++ OnigNextMatchResult: %d\n", NMR);
+  };
   explicit OnigNextMatchResult(const OnigNextMatchResult *other)
-      : index(other->index), captureIndices(other->captureIndices){};
-  ~OnigNextMatchResult();
+      : index(other->index), captureIndices(other->captureIndices)
+  {
+    ++NMR;
+    //printf("+++ OnigNextMatchResult: %d\n", NMR);
+  };
+  ~OnigNextMatchResult()
+  {
+    --NMR;
+    printf("--- OnigNextMatchResult: %d\n", NMR);
+  }
 
   int index;
   std::vector<OnigCaptureIndex> captureIndices;
@@ -66,8 +94,8 @@ class OnigScanner
 {
 public:
   OnigScanner(std::vector<std::string> sources);
-  OnigNextMatchResult *FindNextMatchSync(OnigString &onigString, int startLocation);
-  static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(OnigResult *result, OnigString &source);
+  std::shared_ptr<OnigNextMatchResult> FindNextMatchSync(OnigString &onigString, int startLocation);
+  static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(std::shared_ptr<OnigResult>, OnigString &source);
 
 private:
   vector<shared_ptr<OnigRegExp>> regExps;

@@ -13,20 +13,20 @@ OnigScanner::OnigScanner(std::vector<std::string> sources)
   searcher = shared_ptr<OnigSearcher>(new OnigSearcher(regExps));
 }
 
-OnigNextMatchResult *OnigScanner::FindNextMatchSync(OnigString &onigString, int startLocation)
+std::shared_ptr<OnigNextMatchResult> OnigScanner::FindNextMatchSync(OnigString &onigString, int startLocation)
 {
   shared_ptr<OnigResult> bestResult = searcher->Search(onigString, startLocation);
   if (bestResult != NULL)
   {
-    OnigNextMatchResult *result = new OnigNextMatchResult();
+    std::shared_ptr<OnigNextMatchResult> result(new OnigNextMatchResult());
     result->index = bestResult->Index();
-    result->captureIndices = CaptureIndicesForMatch(bestResult.get(), onigString);
+    result->captureIndices = CaptureIndicesForMatch(bestResult, onigString);
     return result;
   }
-  return NULL;
+  return std::shared_ptr<OnigNextMatchResult>();
 }
 
-std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(OnigResult *result, OnigString &source)
+std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(std::shared_ptr<OnigResult> result, OnigString &source)
 {
   int resultCount = result->Count();
   std::vector<OnigCaptureIndex> captures;
@@ -46,11 +46,6 @@ std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(OnigResult *re
   }
 
   return captures;
-}
-
-OnigNextMatchResult::~OnigNextMatchResult()
-{
-  printf("OnigNextMatchResult destructor\n");
 }
 
 #include "nbind/nbind.h"
