@@ -10,6 +10,7 @@ using ::std::shared_ptr;
 class OnigString
 {
 public:
+  // nbind passes JavaScript strings as utf8 std::string.
   explicit OnigString(std::string utf8Value);
   OnigString(const OnigString *other)
       : uniqueId_(other->uniqueId_), utf8Value(other->utf8Value), utf8_length_(other->utf8_length_),
