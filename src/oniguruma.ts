@@ -95,7 +95,10 @@ export interface OnigScanner extends LibTypes.OnigScanner {
 
 // tslint:disable-next-line:space-before-function-paren
 OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, startPosition: number = 0): LibTypes.OnigNextMatchResult | null {
-	return this.FindNextMatchSync(convertToOnigString(s) as any, convertToPositiveCountableInteger(startPosition));
+	console.time('findNextMatchSync');
+	const result = this.FindNextMatchSync(convertToOnigString(s) as any, convertToPositiveCountableInteger(startPosition));
+	console.timeEnd('findNextMatchSync');
+	return result;
 };
 
 OnigScanner.prototype._findNextMatchSync = OnigScanner.prototype.findNextMatchSync;
