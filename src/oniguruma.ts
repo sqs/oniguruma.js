@@ -95,10 +95,7 @@ export interface OnigScanner extends LibTypes.OnigScanner {
 
 // tslint:disable-next-line:space-before-function-paren
 OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, startPosition: number = 0): LibTypes.OnigNextMatchResult | null {
-	console.time('findNextMatchSync');
-	const result = this.FindNextMatchSync(convertToOnigString(s) as any, convertToPositiveCountableInteger(startPosition));
-	console.timeEnd('findNextMatchSync');
-	return result;
+	return this.FindNextMatchSync(convertToOnigString(s) as any, convertToPositiveCountableInteger(startPosition));
 };
 
 OnigScanner.prototype._findNextMatchSync = OnigScanner.prototype.findNextMatchSync;
@@ -112,8 +109,7 @@ function convertToPositiveCountableInteger(value: any): number {
 
 function convertToOnigString(value: any): OnigString {
 	if (value instanceof OnigString) { return value; }
-	if (typeof value === 'string') { return new OnigString(value); }
-	throw new Error('convertToOnigString: invalid value: ' + value);
+	return new OnigString(value);
 }
 
 export const OnigString: OnigStringCtor = lib.OnigString as any;

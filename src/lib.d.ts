@@ -80,7 +80,7 @@ export class OnigString extends NBindBase {
 	/** const char * utf8_value(); */
 	utf8_value(): string | null;
 
-	/** uint64_t utf8_length(); */
+	/** uint32_t utf8_length(); */
 	utf8_length(): number;
 
 	/** int32_t ConvertUtf8OffsetToUtf16(int32_t); */
