@@ -7,7 +7,9 @@ let binding: nbind.Binding<typeof LibTypes>;
 if (nbind.init) {
 	binding = nbind.init<typeof LibTypes>('dist/' + platform);
 } else {
-	binding = asmjsInit(nbind, {});
+	binding = asmjsInit(nbind, {
+		TOTAL_MEMORY: 16 * 1024 * 1024 * 8,
+	});
 }
 export const lib = binding.lib;
 
@@ -133,6 +135,7 @@ export class OnigString {
 	toString(): string { return this.value; }
 
 	fromJS(output: (value: string, x: number) => void): void {
+		console.count('OnigString fromJS');
 		output(this.value, 0);
 	}
 }
