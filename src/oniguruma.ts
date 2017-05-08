@@ -13,6 +13,8 @@ if (nbind.init) {
 }
 export const lib = binding.lib;
 
+binding.toggleLightGC(true);
+
 export interface OnigCaptureIndex extends LibTypes.OnigCaptureIndex {
 	index: number;
 	start: number;
@@ -41,7 +43,7 @@ class OnigNextMatchResult implements LibTypes.OnigNextMatchResult {
 		public index: number,
 		public captureIndices: LibTypes.OnigCaptureIndex[],
 	) {
-		console.log('XXXXXXXXXXXXXXXXXXX');
+		// console.log('XXXXXXXXXXXXXXXXXXX');
 	}
 
 	fromJS(output: (index: number, captureIndices: LibTypes.OnigCaptureIndex[]) => void): void {
