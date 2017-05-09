@@ -108,11 +108,6 @@ OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, star
 	const os = convertToOnigString(s) as any;
 	const result = this.FindNextMatchSync(os, convertToPositiveCountableInteger(startPosition));
 	if (typeof s === 'string') { os.free(); }
-	if (result) {
-		result.free!();
-		console.log('FREED');
-		// TODO(sqs): manually copy over the data from result into a OnigNextMatchResult, OR do not have a nested ctor where OnigNMR has a OnigCaptureIndex and just use primitives
-	}
 	return result;
 };
 
