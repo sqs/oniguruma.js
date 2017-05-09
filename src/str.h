@@ -4,14 +4,16 @@
 #include <memory>
 #include <string>
 #include <stddef.h>
+#include "nbind/api.h"
 
 using ::std::shared_ptr;
 
 class OnigString
 {
 public:
-  // nbind passes JavaScript strings as utf8 std::string.
-  explicit OnigString(std::string utf8Value);
+  // Use nbind::Buffer of a Uint16Array from JS to avoid incurring unnecessary UTF-16 to UTF-8
+  // conversion.
+  explicit OnigString(nbind::Buffer utf16Array);
   OnigString(const OnigString *other) = delete;
   ~OnigString();
 

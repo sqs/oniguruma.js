@@ -3,24 +3,29 @@
 #include <iostream>
 #include <locale>
 #include <codecvt>
+#include "nbind/api.h"
 
-static int ONIGSTRINGS = 0;
-
-/*
-TODO(sqs): Could speed this up by passing the string data using a JS buffer. Then we would not
-incur UTF-16->UTF-8 conversion, and our OnigString would receive raw UTF-16 bytes. We would
-only need to perform one conversion (from UTF-16 to UTF-8).
-*/
-
-OnigString::OnigString(std::string utf8Value)
-	: utf8Value(utf8Value), utf8_length_(utf8Value.length())
+OnigString::OnigString(nbind::Buffer utf16Array)
 {
 	static int idGenerator = 0;
 	uniqueId_ = ++idGenerator;
 
-	printf("UTF-8: %s len %d\n", utf8Value.data(), utf8Value.length());
+	// Convert UTF-16 encoded buffer to UTF-8 string.
+	std::u16string utf16Value = std::u16string(reinterpret_cast<char16_t *>(utf16Array.data()), utf16Array.length() / sizeof(char16_t));
+	std::u16string err2 = u"ERR2";
+	std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> convert("ERR1", err2);
+	//try
+	//{
+	utf8Value = convert.to_bytes(reinterpret_cast<char16_t *>(utf16Array.data()), reinterpret_cast<char16_t *>(utf16Array.data() + utf16Array.length()));
+	//}
+	//catch (const std::range_error &e)
+	//{
+	//		printf("RANGE ERROR\n");
+	//}
+	utf8_length_ = utf8Value.length();
 
-	std::u16string utf16Value = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{}.from_bytes(utf8Value.data());
+	printf("buffer len is: %d\n", utf16Array.length());
+	printf("UTF-8: %s len %d\n", utf8Value.data(), utf8Value.length());
 	printf("UTF-16: %s len %d\n", utf16Value.data(), utf16Value.length());
 
 	hasMultiByteChars = (utf16Value.length() != utf8_length_);
@@ -141,7 +146,7 @@ int OnigString::ConvertUtf16OffsetToUtf8(int utf16Offset)
 #ifdef NBIND_CLASS
 NBIND_CLASS(OnigString)
 {
-	construct<std::string>();
+	construct<nbind::Buffer>();
 	method(utf8_value);
 	method(utf8_length);
 }

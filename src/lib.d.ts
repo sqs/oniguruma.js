@@ -44,8 +44,8 @@ export class OnigScanner extends NBindBase {
 }
 
 export class OnigString extends NBindBase {
-	/** OnigString(std::string); */
-	constructor(p0: string);
+	/** OnigString(Buffer); */
+	constructor(p0: number[] | ArrayBuffer | DataView | Uint8Array | Buffer);
 
 	/** const char * utf8_value(); */
 	utf8_value(): string | null;

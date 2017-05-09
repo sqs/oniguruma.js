@@ -137,7 +137,13 @@ function convertToOnigString(value: any): OnigString {
 	return new OnigString(value ? value.toString() : value);
 }
 
-export const OnigString: OnigStringCtor = lib.OnigString as any;
+// export const OnigString: OnigStringCtor = lib.OnigString as any;
+
+export class OnigString extends lib.OnigString {
+	constructor(value: string) {
+		super(encodeStringAsUTF16Array(value));
+	}
+}
 
 export interface OnigStringCtor {
 	new (value: string): OnigString;
@@ -172,4 +178,11 @@ OnigString.prototype.toString = function (this: OnigString): string {
 };
 OnigString.prototype.dispose = OnigString.prototype.free!;
 
-// binding.bind('OnigString', OnigString);
+function encodeStringAsUTF16Array(str: string): ArrayBuffer {
+	const buf = new ArrayBuffer(str.length * 2);
+	const bufView = new Uint16Array(buf);
+	for (let i = 0, strLen = str.length; i < strLen; i++) {
+		bufView[i] = str.charCodeAt(i);
+	}
+	return buf;
+}
