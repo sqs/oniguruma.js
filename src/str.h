@@ -11,9 +11,9 @@ using ::std::shared_ptr;
 class OnigString
 {
 public:
-  // Use nbind::Buffer of a Uint16Array from JS to avoid incurring unnecessary UCS-2 to UTF-8
+  // Use nbind::Buffer of a Uint16Array from JS to avoid incurring unnecessary UTF-16 to UTF-8
   // conversion.
-  explicit OnigString(nbind::Buffer ucs2Array);
+  explicit OnigString(nbind::Buffer utf16Array);
   OnigString(const OnigString *other) = delete;
   ~OnigString();
 
