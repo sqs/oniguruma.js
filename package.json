@@ -1,5 +1,5 @@
 {
-  "name": "oniguruma.js",
+  "name": "@sourcegraph/oniguruma",
   "main": "./dist/src/oniguruma.js",
   "description": "oniguruma regular expression library",
   "version": "6.2.1",

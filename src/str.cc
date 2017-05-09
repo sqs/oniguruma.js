@@ -7,9 +7,9 @@
 static int ONIGSTRINGS = 0;
 
 OnigString::OnigString(std::string utf8Value)
-		: utf8Value(utf8Value), utf8_length_(utf8Value.length())
+	: utf8Value(utf8Value), utf8_length_(utf8Value.length())
 {
-	// printf("+++ OnigString: %d\n", ++ONIGSTRINGS);
+	//printf("+++ OnigString: %d\n", ++ONIGSTRINGS);
 
 	static int idGenerator = 0;
 	uniqueId_ = ++idGenerator;
@@ -89,7 +89,7 @@ OnigString::OnigString(std::string utf8Value)
 OnigString::~OnigString()
 {
 	//printf("string deconstructor: %s\n", utf8Value.data());
-	// printf("--- OnigString: %d\n", --ONIGSTRINGS);
+	//printf("--- OnigString: %d\n", --ONIGSTRINGS);
 	if (hasMultiByteChars)
 	{
 		delete[] utf16OffsetToUtf8;

@@ -8,12 +8,12 @@ if (nbind.init) {
 	binding = nbind.init<typeof LibTypes>('dist/' + platform);
 } else {
 	binding = asmjsInit(nbind, {
-		TOTAL_MEMORY: 16 * 1024 * 1024 * 1,
+		TOTAL_MEMORY: 16 * 1024 * 1024 * 2,
 	});
 }
 export const lib = binding.lib;
 
-binding.toggleLightGC(true);
+// binding.toggleLightGC(true);
 
 export interface OnigCaptureIndex extends LibTypes.OnigCaptureIndex {
 	index: number;
@@ -23,35 +23,12 @@ export interface OnigCaptureIndex extends LibTypes.OnigCaptureIndex {
 	match?: string; // only populated by OnigRegExp.captureIndicesForMatch
 }
 
-class OnigCaptureIndexImpl implements LibTypes.OnigCaptureIndex {
-	constructor(
-		public index: number,
-		public start: number,
-		public end: number,
-		public length: number,
-	) { }
-
-	fromJS(output: (index: number, start: number, end: number, length: number) => void): void {
-		output(this.index, this.start, this.end, this.length);
-	}
-}
-
-binding.bind('OnigCaptureIndex', OnigCaptureIndexImpl);
-
 class OnigNextMatchResult implements LibTypes.OnigNextMatchResult {
 	constructor(
 		public index: number,
-		public captureIndices: LibTypes.OnigCaptureIndex[],
-	) {
-		// console.log('XXXXXXXXXXXXXXXXXXX');
-	}
-
-	fromJS(output: (index: number, captureIndices: LibTypes.OnigCaptureIndex[]) => void): void {
-		output(this.index, this.captureIndices);
-	}
+		public captureIndices: OnigCaptureIndex[],
+	) { }
 }
-
-binding.bind('OnigNextMatchResult', OnigNextMatchResult);
 
 export class OnigRegExp {
 	// TODO(sqs): Call OnigString.prototype.free when needed for OnigStrings owned by this class.
@@ -104,11 +81,24 @@ export interface OnigScanner extends LibTypes.OnigScanner {
 }
 
 // tslint:disable-next-line:space-before-function-paren
-OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, startPosition: number = 0): LibTypes.OnigNextMatchResult | null {
-	const os = convertToOnigString(s) as any;
+OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, startPosition: number = 0): OnigNextMatchResult | null {
+	const os: LibTypes.OnigString = convertToOnigString(s) as any;
 	const result = this.FindNextMatchSync(os, convertToPositiveCountableInteger(startPosition));
-	if (typeof s === 'string') { os.free(); }
-	return result;
+	if (typeof s === 'string') {
+		os.free!();
+	}
+	if (result) {
+		const matchResult = new OnigNextMatchResult(result.index, result.captureIndices.map(c => ({
+			index: c.index,
+			start: c.start,
+			end: c.end,
+			length: c.length,
+		})));
+		result.captureIndices.forEach(c => c.free!());
+		result.free!();
+		return matchResult;
+	}
+	return null;
 };
 
 OnigScanner.prototype._findNextMatchSync = OnigScanner.prototype.findNextMatchSync;

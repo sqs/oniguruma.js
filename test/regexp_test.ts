@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import { OnigRegExp } from '../src/oniguruma';
 
-describe('OnigRegExp', () => {
+describe.skip('OnigRegExp', () => {
 	describe('::searchSync(string, index)', () => {
 		it('returns an array of the match and all capture groups', () => {
 			const regex = new OnigRegExp('\\w(\\d+)');

@@ -71,7 +71,7 @@ public:
   ~OnigNextMatchResult()
   {
     --NMR;
-    printf("--- OnigNextMatchResult: %d\n", NMR);
+    //printf("--- OnigNextMatchResult: %d\n", NMR);
   }
 
   int index;
