@@ -1,12 +1,6 @@
 export class NBindBase { free?(): void }
 
 export class OnigCaptureIndex extends NBindBase {
-	/** OnigCaptureIndex(); */
-	constructor();
-
-	/** OnigCaptureIndex(const OnigCaptureIndex *); */
-	constructor(p0: OnigCaptureIndex);
-
 	/** int32_t index; -- Read-only */
 	index: number;
 
@@ -21,12 +15,6 @@ export class OnigCaptureIndex extends NBindBase {
 }
 
 export class OnigNextMatchResult extends NBindBase {
-	/** OnigNextMatchResult(); */
-	constructor();
-
-	/** OnigNextMatchResult(const OnigNextMatchResult *); */
-	constructor(p0: OnigNextMatchResult);
-
 	/** int32_t index; -- Read-only */
 	index: number;
 
@@ -59,18 +47,9 @@ export class OnigString extends NBindBase {
 	/** OnigString(std::string); */
 	constructor(p0: string);
 
-	/** int32_t uniqueId(); */
-	uniqueId(): number;
-
 	/** const char * utf8_value(); */
 	utf8_value(): string | null;
 
 	/** uint32_t utf8_length(); */
 	utf8_length(): number;
-
-	/** int32_t ConvertUtf8OffsetToUtf16(int32_t); */
-	ConvertUtf8OffsetToUtf16(p0: number): number;
-
-	/** int32_t ConvertUtf16OffsetToUtf8(int32_t); */
-	ConvertUtf16OffsetToUtf8(p0: number): number;
 }

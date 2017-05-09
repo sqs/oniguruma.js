@@ -6,15 +6,22 @@
 
 static int ONIGSTRINGS = 0;
 
+/*
+TODO(sqs): Could speed this up by passing the string data using a JS buffer. Then we would not
+incur UTF-16->UTF-8 conversion, and our OnigString would receive raw UTF-16 bytes. We would
+only need to perform one conversion (from UTF-16 to UTF-8).
+*/
+
 OnigString::OnigString(std::string utf8Value)
 	: utf8Value(utf8Value), utf8_length_(utf8Value.length())
 {
-	//printf("+++ OnigString: %d\n", ++ONIGSTRINGS);
-
 	static int idGenerator = 0;
 	uniqueId_ = ++idGenerator;
 
+	printf("UTF-8: %s len %d\n", utf8Value.data(), utf8Value.length());
+
 	std::u16string utf16Value = std::wstring_convert<std::codecvt_utf8_utf16<char16_t>, char16_t>{}.from_bytes(utf8Value.data());
+	printf("UTF-16: %s len %d\n", utf16Value.data(), utf16Value.length());
 
 	hasMultiByteChars = (utf16Value.length() != utf8_length_);
 
@@ -88,8 +95,6 @@ OnigString::OnigString(std::string utf8Value)
 
 OnigString::~OnigString()
 {
-	//printf("string deconstructor: %s\n", utf8Value.data());
-	//printf("--- OnigString: %d\n", --ONIGSTRINGS);
 	if (hasMultiByteChars)
 	{
 		delete[] utf16OffsetToUtf8;
@@ -137,10 +142,7 @@ int OnigString::ConvertUtf16OffsetToUtf8(int utf16Offset)
 NBIND_CLASS(OnigString)
 {
 	construct<std::string>();
-	method(uniqueId);
 	method(utf8_value);
 	method(utf8_length);
-	method(ConvertUtf8OffsetToUtf16);
-	method(ConvertUtf16OffsetToUtf8);
 }
 #endif // NBIND_CLASS

@@ -12,13 +12,7 @@ class OnigString
 public:
   // nbind passes JavaScript strings as utf8 std::string.
   explicit OnigString(std::string utf8Value);
-  OnigString(const OnigString *other)
-      : utf8Value(other->utf8Value), uniqueId_(other->uniqueId_), utf8_length_(other->utf8_length_),
-        hasMultiByteChars(other->hasMultiByteChars),
-        utf16_length_(other->utf16_length_), utf16OffsetToUtf8(other->utf16OffsetToUtf8), utf8OffsetToUtf16(other->utf8OffsetToUtf16)
-  {
-    printf("OnigString const pointer copy constructor called\n");
-  };
+  OnigString(const OnigString *other) = delete;
   ~OnigString();
 
   int uniqueId() { return uniqueId_; }

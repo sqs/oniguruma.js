@@ -1,7 +1,7 @@
 import * as assert from 'assert';
 import { OnigString } from '../src/oniguruma';
 
-describe.skip('OnigString', () => {
+describe('OnigString', () => {
 	it('has a length property', () => {
 		assert.equal(new OnigString('abc').length, 3);
 	});

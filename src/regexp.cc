@@ -21,13 +21,10 @@ OnigRegExp::OnigRegExp(const std::string &source)
     onig_error_code_to_str(errorString, status, &error);
     NBIND_ERR(reinterpret_cast<char *>(errorString));
   }
-
-  //printf("OnigRegExp::OnigRegExp\n");
 }
 
 OnigRegExp::~OnigRegExp()
 {
-  //printf("~OnigRegExp: %d\n");
   if (regex_)
     onig_free(regex_);
 }

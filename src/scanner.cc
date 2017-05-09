@@ -53,8 +53,6 @@ std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(std::shared_pt
 #ifdef NBIND_CLASS
 NBIND_CLASS(OnigCaptureIndex)
 {
-  construct<>();
-  construct<const OnigCaptureIndex *>();
   getter(getIndex);
   getter(getStart);
   getter(getEnd);
@@ -62,8 +60,6 @@ NBIND_CLASS(OnigCaptureIndex)
 }
 NBIND_CLASS(OnigNextMatchResult)
 {
-  construct<>();
-  construct<const OnigNextMatchResult *>();
   getter(getIndex);
   getter(getCaptureIndices);
 }
