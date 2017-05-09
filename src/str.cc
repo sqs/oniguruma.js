@@ -8,18 +8,17 @@
 // TODO(sqs): do these utf8 conversions using nan or the v8 API directly when running in v8, for perf and safety.
 
 // Adapted from https://github.com/kripken/emscripten/blob/6dc4ac5f9e4d8484e273e4dcc554f809738cedd6/src/preamble.js#L671.
-static size_t lengthBytesUTF8(const char16_t *utf16Data, size_t len)
+static size_t lengthBytesUTF8(const char16_t const *utf16Data, size_t len)
 {
 	size_t utf8Len = 0;
 	for (size_t i = 0; i < len; i++)
 	{
 		// Gotcha: charCodeAt returns a 16-bit word that is a UTF-16 encoded code unit, not a Unicode code point of the character! So decode UTF16->UTF32->UTF8.
 		// See http://unicode.org/faq/utf_bom.html#utf16-3
-		char16_t u = utf16Data[i]; // possibly a lead surrogate
+		int u = utf16Data[i]; // possibly a lead surrogate
 		if (u >= 0xd800 && u <= 0xdbff)
 		{
 			// Hit a high surrogate. Try to look for a low surrogate immediately following.
-			bool foundLowSurrogate = false;
 			if (i + 1 < len)
 			{
 				char16_t next = utf16Data[i + 1];
@@ -60,21 +59,33 @@ static size_t lengthBytesUTF8(const char16_t *utf16Data, size_t len)
 }
 
 // Adapted from https://github.com/kripken/emscripten/blob/6dc4ac5f9e4d8484e273e4dcc554f809738cedd6/src/preamble.js#L603.
-size_t stringToUTF8Array(const char16_t *str, std::string &outU8Array, size_t maxBytesToWrite)
+size_t stringToUTF8Array(const char16_t *str, size_t utf16Len, std::string &outU8Array)
 {
-	if (!(maxBytesToWrite > 0)) // Parameter maxBytesToWrite is not optional. Negative values, 0, null, undefined and false each don't write out any bytes.
+	if (!(utf16Len > 0)) // Parameter len is not optional. Negative values, 0, null, undefined and false each don't write out any bytes.
 		return 0;
 
 	size_t outIdx = 0;
-	size_t endIdx = maxBytesToWrite; // -1 for string null terminator.
-	for (size_t i = 0; i < maxBytesToWrite; ++i)
+	size_t endIdx = outU8Array.capacity(); // -1 for string null terminator.
+	for (size_t i = 0; i < utf16Len; ++i)
 	{
 		// Gotcha: charCodeAt returns a 16-bit word that is a UTF-16 encoded code unit, not a Unicode code point of the character! So decode UTF16->UTF32->UTF8.
 		// See http://unicode.org/faq/utf_bom.html#utf16-3
 		// For UTF8 byte structure, see http://en.wikipedia.org/wiki/UTF-8#Description and https://www.ietf.org/rfc/rfc2279.txt and https://tools.ietf.org/html/rfc3629
-		char16_t u = str[i]; // possibly a lead surrogate
-		if (u >= 0xD800 && u <= 0xDFFF)
-			u = 0x10000 + ((u & 0x3FF) << 10) | (str[++i] & 0x3FF);
+		int u = str[i]; // possibly a lead surrogate
+		if (u >= 0xd800 && u <= 0xdbff)
+		{
+			// Hit a high surrogate. Try to look for a low surrogate immediately following.
+			if (i + 1 < utf16Len)
+			{
+				char16_t next = str[i + 1];
+				if (next >= 0xdc00 && next <= 0xdfff)
+				{
+					// Found a low surrogate.
+					u = 0x10000 + ((u & 0x3FF) << 10) | (str[++i] & 0x3FF);
+				}
+			}
+		}
+
 		if (u <= 0x7F)
 		{
 			if (outIdx >= endIdx)
@@ -145,16 +156,16 @@ OnigString::OnigString(nbind::Buffer utf16Array)
 
 	utf8_length_ = lengthBytesUTF8(utf16Value, utf16Size);
 	utf8Value.reserve(utf8_length_);
-	stringToUTF8Array(utf16Value, utf8Value, utf8_length_);
+	stringToUTF8Array(utf16Value, utf16Size, utf8Value);
 
-	printf("buffer len is: %d\n", utf16Array.length());
-	printf("UTF-8: len %d:", utf8_length_);
-	for (int i = 0; i < utf8Value.length(); i++)
-	{
-		printf(" %02hhx", utf8Value[i]);
-	}
-	printf("\n");
-	wprintf(L"UTF-16: len %d: %04x %04x %04x\n", utf16Size, utf16Value[0], utf16Value[1], utf16Value[2]);
+	// printf("buffer len is: %d\n", utf16Array.length());
+	// printf("UTF-8: len %d:", utf8_length_);
+	// for (int i = 0; i < utf8Value.length(); i++)
+	// {
+	// 	printf(" %02hhx", utf8Value[i]);
+	// }
+	// printf("\n");
+	// wprintf(L"UTF-16: len %d: %04x %04x %04x\n", utf16Size, utf16Value[0], utf16Value[1], utf16Value[2]);
 
 	hasMultiByteChars = (utf16Size != utf8_length_);
 
@@ -274,7 +285,7 @@ int OnigString::ConvertUtf16OffsetToUtf8(int utf16Offset)
 #ifdef NBIND_CLASS
 NBIND_CLASS(OnigString)
 {
-	construct<nbind::Buffer>();
+	construct<nbind::Buffer>(nbind::Strict());
 	method(utf8_value);
 	method(utf8_length);
 }

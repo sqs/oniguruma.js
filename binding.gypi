@@ -107,17 +107,13 @@
         ['asmjs==1', {
             # Debugging build:
             #
-            'cflags': ['-O0', '--memory-init-file', '0', '-g4', '-s', 'ALLOW_MEMORY_GROWTH=1', '-s', 'DISABLE_EXCEPTION_CATCHING=0'],
-            'ldflags': ['-O0', '--memory-init-file', '0', '-g4', '-s', 'ALLOW_MEMORY_GROWTH=1', '-s', 'DISABLE_EXCEPTION_CATCHING=0'],
+            #'cflags': ['-O0', '--memory-init-file', '0', '-g4', '-s', 'ALLOW_MEMORY_GROWTH=1'],
+            #'ldflags': ['-O0', '--memory-init-file', '0', '-g4', '-s', 'ALLOW_MEMORY_GROWTH=1'],
 
             # Optimized production build:
             #
-            #'cflags': ['-O3', '--memory-init-file', '0', '-s', 'ALLOW_MEMORY_GROWTH=1'],
-            #'ldflags': ['-O3', '--memory-init-file', '0', '-s', 'ALLOW_MEMORY_GROWTH=1'],
-            #
-            #
-            # TODO Reenable exceptions https://github.com/nodejs/node-gyp/issues/17
-            # MAYBE NEED -s DISABLE_EXCEPTION_CATCHING=0
+            'cflags': ['-O3', '--memory-init-file', '0', '-s', 'ALLOW_MEMORY_GROWTH=1'],
+            'ldflags': ['-O3', '--memory-init-file', '0', '-s', 'ALLOW_MEMORY_GROWTH=1'],
         }],
     ]
 }

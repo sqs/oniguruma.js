@@ -33,10 +33,10 @@ export class OnigRegExp extends NBindBase {
 export class OnigResult extends NBindBase {}
 
 export class OnigScanner extends NBindBase {
-	/** OnigScanner(std::vector<std::string>); */
+	/** OnigScanner(std::vector<std::string>); -- Strict */
 	constructor(p0: string[]);
 
-	/** std::shared_ptr<OnigNextMatchResult> FindNextMatchSync(OnigString &, int32_t); */
+	/** std::shared_ptr<OnigNextMatchResult> FindNextMatchSync(OnigString &, int32_t); -- Strict */
 	FindNextMatchSync(p0: OnigString, p1: number): OnigNextMatchResult | null;
 
 	/** static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(std::shared_ptr<OnigResult>, OnigString &); */
@@ -44,7 +44,7 @@ export class OnigScanner extends NBindBase {
 }
 
 export class OnigString extends NBindBase {
-	/** OnigString(Buffer); */
+	/** OnigString(Buffer); -- Strict */
 	constructor(p0: number[] | ArrayBuffer | DataView | Uint8Array | Buffer);
 
 	/** const char * utf8_value(); */

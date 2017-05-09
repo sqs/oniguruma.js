@@ -65,8 +65,8 @@ NBIND_CLASS(OnigNextMatchResult)
 }
 NBIND_CLASS(OnigScanner)
 {
-  construct<std::vector<std::string>>();
-  method(FindNextMatchSync);
+  construct<std::vector<std::string>>(nbind::Strict());
+  method(FindNextMatchSync, nbind::Strict());
   method(CaptureIndicesForMatch);
 }
 #endif // NBIND_CLASS

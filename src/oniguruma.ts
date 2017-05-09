@@ -134,7 +134,8 @@ function convertToPositiveCountableInteger(value: any): number {
 
 function convertToOnigString(value: any): OnigString {
 	if (value instanceof OnigString) { return value; }
-	return new OnigString(value ? value.toString() : value);
+	if (typeof value === 'string') { return new OnigString(value ? value.toString() : value); }
+	throw new Error('OnigString: invalid value: ' + typeof value);
 }
 
 // export const OnigString: OnigStringCtor = lib.OnigString as any;
@@ -179,6 +180,7 @@ OnigString.prototype.toString = function (this: OnigString): string {
 OnigString.prototype.dispose = OnigString.prototype.free!;
 
 function encodeStringAsUTF16Array(str: string): ArrayBuffer {
+	if (typeof str !== 'string') { return str; }
 	const buf = new ArrayBuffer(str.length * 2);
 	const bufView = new Uint16Array(buf);
 	for (let i = 0, strLen = str.length; i < strLen; i++) {

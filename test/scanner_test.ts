@@ -45,11 +45,11 @@ describe('OnigScanner', () => {
 
 		it("returns false when the input string isn't a string", () => {
 			const scanner = new OnigScanner(['1']);
-			assert.throws(() => (scanner.findNextMatchSync as any)(), /Type mismatch/);
-			assert.throws(() => (scanner.findNextMatchSync as any)(null), /Type mismatch/);
-			assert.throws(() => (scanner.findNextMatchSync as any)(undefined), /Type mismatch/);
-			assert.equal((scanner.findNextMatchSync as any)(2), null);
-			assert.equal((scanner.findNextMatchSync as any)(false), null);
+			assert.throws(() => (scanner.findNextMatchSync as any)(), /invalid value: undefined/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(null), /invalid value: object/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(undefined), /invalid value: undefined/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(2), /invalid value: number/);
+			assert.throws(() => (scanner.findNextMatchSync as any)(false), /invalid value: boolean/);
 		});
 
 		it("uses 0 as the start position when the input start position isn't a valid number", () => {
@@ -69,38 +69,34 @@ describe('OnigScanner', () => {
 		}));
 
 	describe('when the input string contains invalid surrogate pairs', () =>
-		it.only('interprets them as a code point', () => {
-			console.log('--------------------------------------------');
+		it('interprets them as a code point', () => {
 			const scanner = new OnigScanner(['X']);
-			// let match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd83c)}X`, 0)!;
-			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 0, end: 1, length: 1 }]);
+			let match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd83c)}X`, 0)!;
+			assert.deepEqual(match.captureIndices, [{ index: 0, start: 0, end: 1, length: 1 }]);
 
-			// match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd83c)}X`, 1)!;
-			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 2, end: 3, length: 1 }]);
+			match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd83c)}X`, 1)!;
+			assert.deepEqual(match.captureIndices, [{ index: 0, start: 2, end: 3, length: 1 }]);
 
-			// match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd83c)}X`, 2)!;
-			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 2, end: 3, length: 1 }]);
+			match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd83c)}X`, 2)!;
+			assert.deepEqual(match.captureIndices, [{ index: 0, start: 2, end: 3, length: 1 }]);
 
-			// match = scanner.findNextMatchSync(`X${String.fromCharCode(0xdfff)}X`, 0)!;
-			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 0, end: 1, length: 1 }]);
+			match = scanner.findNextMatchSync(`X${String.fromCharCode(0xdfff)}X`, 0)!;
+			assert.deepEqual(match.captureIndices, [{ index: 0, start: 0, end: 1, length: 1 }]);
 
-			// match = scanner.findNextMatchSync(`X${String.fromCharCode(0xdfff)}X`, 1)!;
-			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 2, end: 3, length: 1 }]);
+			match = scanner.findNextMatchSync(`X${String.fromCharCode(0xdfff)}X`, 1)!;
+			assert.deepEqual(match.captureIndices, [{ index: 0, start: 2, end: 3, length: 1 }]);
 
-			// match = scanner.findNextMatchSync(`X${String.fromCharCode(0xdfff)}X`, 2)!;
-			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 2, end: 3, length: 1 }]);
+			match = scanner.findNextMatchSync(`X${String.fromCharCode(0xdfff)}X`, 2)!;
+			assert.deepEqual(match.captureIndices, [{ index: 0, start: 2, end: 3, length: 1 }]);
 
-			let match = scanner.findNextMatchSync(
+			// These are actually valid, just testing the min & max
+			match = scanner.findNextMatchSync(
 				`X${String.fromCharCode(0xd800)}${String.fromCharCode(0xdc00)}X`, 2)!;
 			assert.deepEqual(match.captureIndices, [{ index: 0, start: 3, end: 4, length: 1 }]);
 
-
-			// These are actually valid, just testing the min & max
-			// let match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd800)}${String.fromCharCode(0xdc00)}X`, 2)!;
-			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 3, end: 4, length: 1 }]);
-
-			// match = scanner.findNextMatchSync(`X${String.fromCharCode(0xdbff)}${String.fromCharCode(0xdfff)}X`, 2)!;
-			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 3, end: 4, length: 1 }]);
+			match = scanner.findNextMatchSync(
+				`X${String.fromCharCode(0xdbff)}${String.fromCharCode(0xdfff)}X`, 2)!;
+			assert.deepEqual(match.captureIndices, [{ index: 0, start: 3, end: 4, length: 1 }]);
 		}));
 
 	describe('when the start offset is out of bounds', () =>

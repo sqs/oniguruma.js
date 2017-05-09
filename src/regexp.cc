@@ -42,7 +42,7 @@ shared_ptr<OnigResult> OnigRegExp::Search(OnigString &str, int position)
   lastSearchStrUniqueId = str.uniqueId();
   lastSearchPosition = position;
   lastSearchResult = DoSearch(str.utf8_value(), position, str.utf8_length());
-  printf("### DoSearch('%s', %d, %d) ==> %p\n", str.utf8_value(), position, str.utf8_length(), lastSearchResult.get());
+  // printf("### DoSearch('%s', %d, %d) ==> %p\n", str.utf8_value(), position, str.utf8_length(), lastSearchResult.get());
   return lastSearchResult;
 }
 
