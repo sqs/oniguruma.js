@@ -141,7 +141,7 @@ function convertToOnigString(value: any): OnigString {
 
 export class OnigString extends lib.OnigString {
 	constructor(value: string) {
-		super(encodeStringAsUTF16Array(value));
+		super(encodeStringAsUCS2Array(value));
 	}
 }
 
@@ -178,7 +178,7 @@ OnigString.prototype.toString = function (this: OnigString): string {
 };
 OnigString.prototype.dispose = OnigString.prototype.free!;
 
-function encodeStringAsUTF16Array(str: string): ArrayBuffer {
+function encodeStringAsUCS2Array(str: string): ArrayBuffer {
 	const buf = new ArrayBuffer(str.length * 2);
 	const bufView = new Uint16Array(buf);
 	for (let i = 0, strLen = str.length; i < strLen; i++) {

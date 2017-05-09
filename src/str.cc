@@ -5,34 +5,79 @@
 #include <codecvt>
 #include "nbind/api.h"
 
-OnigString::OnigString(nbind::Buffer utf16Array)
+OnigString::OnigString(nbind::Buffer ucs2Array)
 {
 	static int idGenerator = 0;
 	uniqueId_ = ++idGenerator;
 
-	// Convert UTF-16 encoded buffer to UTF-8 string.
-	std::u16string utf16Value = std::u16string(reinterpret_cast<char16_t *>(utf16Array.data()), utf16Array.length() / sizeof(char16_t));
-	std::u16string err2 = u"ERR2";
-	std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> convert("ERR1", err2);
-	//try
-	//{
-	utf8Value = convert.to_bytes(reinterpret_cast<char16_t *>(utf16Array.data()), reinterpret_cast<char16_t *>(utf16Array.data() + utf16Array.length()));
-	//}
-	//catch (const std::range_error &e)
-	//{
-	//		printf("RANGE ERROR\n");
-	//}
+	// Convert UCS-2 encoded buffer from JavaScript to a UTF-8 string.
+	//
+	// We don't need to keep the UCS-2 buffer around, because we pass the UTF-8 string to
+	// Oniguruma. (See https://github.com/atom/node-oniguruma/pull/63#issuecomment-295466190
+	// for why we can't just keep it in UCS-2 or UTF-16.)
+	char16_t *ucs2Value = reinterpret_cast<char16_t *>(ucs2Array.data());
+	size_t ucs2Size = ucs2Array.length() / sizeof(char16_t);
+
+	// Replace lone surrogates with the replacement character, because if any of them exist in
+	// the input string to codecvt_utf8, the output will be an empty UTF-8 string. This mimics
+	// the behavior of the v8::String::Utf8Value conversion.
+	for (int i = 0, len = ucs2Size; i < len; i++)
+	{
+		char16_t in = ucs2Value[i];
+
+		unsigned int codepoint = in;
+		bool wasSurrogatePair = false;
+
+		if (in >= 0xd800 && in <= 0xdbff)
+		{
+			// Hit a high surrogate. Try to look for a low surrogate immediately following.
+			if (i + 1 < len)
+			{
+				char16_t next = ucs2Value[i + 1];
+				if (next >= 0xdc00 && next <= 0xdfff)
+				{
+					// Found a low surrogate. Skip past the surrogate pair.
+					i++;
+					continue;
+				}
+			}
+
+			// No matching low surrogate. Replace with replacement character.
+			wprintf(L"hit LONE HIGH surrogate %x at i=%d\n", in, i);
+			ucs2Value[i] = 0xfffd;
+		}
+		else if (in >= 0xdc00 && in <= 0xdfff)
+		{
+			// Hit a low surrogate, and the preceding character was not a high surrogate
+			// (otherwise we would've skipped past this character). Replace with replacement
+			// character.
+			wprintf(L"hit LONE LOW surrogate %x at i=%d\n", in, i);
+			ucs2Value[i] = 0xfffd;
+		}
+	}
+
+	// Perform the conversion. The ucs2Array points to the same underlying data we may have
+	// modified in the preceding loop.
+	std::wstring_convert<std::codecvt_utf8<char16_t>, char16_t> convert;
+	utf8Value = convert.to_bytes(
+		reinterpret_cast<char16_t *>(ucs2Array.data()),
+		reinterpret_cast<char16_t *>(ucs2Array.data() + ucs2Array.length()));
 	utf8_length_ = utf8Value.length();
 
-	printf("buffer len is: %d\n", utf16Array.length());
-	printf("UTF-8: %s len %d\n", utf8Value.data(), utf8Value.length());
-	printf("UTF-16: %s len %d\n", utf16Value.data(), utf16Value.length());
+	printf("buffer len is: %d\n", ucs2Array.length());
+	printf("UTF-8: len %d:", utf8Value.length());
+	for (int i = 0; i < utf8Value.length(); i++)
+	{
+		printf(" %02hhx", utf8Value[i]);
+	}
+	printf("\n");
+	wprintf(L"UTF-16: len %d: %04x %04x %04x\n", ucs2Size, ucs2Value[0], ucs2Value[1], ucs2Value[2]);
 
-	hasMultiByteChars = (utf16Value.length() != utf8_length_);
+	hasMultiByteChars = (ucs2Size != utf8_length_);
 
 	if (hasMultiByteChars)
 	{
-		utf16_length_ = utf16Value.length();
+		utf16_length_ = ucs2Size;
 
 		utf16OffsetToUtf8 = new int[utf16_length_ + 1];
 		utf16OffsetToUtf8[utf16_length_] = utf8_length_;
@@ -44,7 +89,7 @@ OnigString::OnigString(nbind::Buffer utf16Array)
 		int i8 = 0;
 		for (int i16 = 0, len = utf16_length_; i16 < len; i16++)
 		{
-			char16_t in = utf16Value[i16];
+			char16_t in = ucs2Value[i16];
 
 			unsigned int codepoint = in;
 			bool wasSurrogatePair = false;
@@ -54,7 +99,7 @@ OnigString::OnigString(nbind::Buffer utf16Array)
 				// Hit a high surrogate, try to look for a matching low surrogate
 				if (i16 + 1 < len)
 				{
-					char16_t next = utf16Value[i16 + 1];
+					char16_t next = ucs2Value[i16 + 1];
 					if (next >= 0xdc00 && next <= 0xdfff)
 					{
 						// Found the matching low surrogate

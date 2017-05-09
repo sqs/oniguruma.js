@@ -72,8 +72,8 @@ describe('OnigScanner', () => {
 		it.only('interprets them as a code point', () => {
 			console.log('--------------------------------------------');
 			const scanner = new OnigScanner(['X']);
-			let match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd83c)}X`, 0)!;
-			assert.deepEqual(match.captureIndices, [{ index: 0, start: 0, end: 1, length: 1 }]);
+			// let match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd83c)}X`, 0)!;
+			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 0, end: 1, length: 1 }]);
 
 			// match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd83c)}X`, 1)!;
 			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 2, end: 3, length: 1 }]);
@@ -90,8 +90,13 @@ describe('OnigScanner', () => {
 			// match = scanner.findNextMatchSync(`X${String.fromCharCode(0xdfff)}X`, 2)!;
 			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 2, end: 3, length: 1 }]);
 
-			// // These are actually valid, just testing the min & max
-			// match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd800)}${String.fromCharCode(0xdc00)}X`, 2)!;
+			let match = scanner.findNextMatchSync(
+				`X${String.fromCharCode(0xd800)}${String.fromCharCode(0xdc00)}X`, 2)!;
+			assert.deepEqual(match.captureIndices, [{ index: 0, start: 3, end: 4, length: 1 }]);
+
+
+			// These are actually valid, just testing the min & max
+			// let match = scanner.findNextMatchSync(`X${String.fromCharCode(0xd800)}${String.fromCharCode(0xdc00)}X`, 2)!;
 			// assert.deepEqual(match.captureIndices, [{ index: 0, start: 3, end: 4, length: 1 }]);
 
 			// match = scanner.findNextMatchSync(`X${String.fromCharCode(0xdbff)}${String.fromCharCode(0xdfff)}X`, 2)!;
