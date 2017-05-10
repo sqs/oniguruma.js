@@ -146,29 +146,25 @@ OnigString::OnigString(nbind::Buffer utf16Array)
 	static int idGenerator = 0;
 	uniqueId_ = ++idGenerator;
 
-	// Convert UCS-2 encoded buffer from JavaScript to a UTF-8 string.
+	// Convert UTF-16 encoded buffer from JavaScript to a UTF-8 string.
 	//
-	// We don't need to keep the UCS-2 buffer around, because we pass the UTF-8 string to
+	// We don't need to keep the UTF-16 buffer around, because we pass the UTF-16 string to
 	// Oniguruma. (See https://github.com/atom/node-oniguruma/pull/63#issuecomment-295466190
-	// for why we can't just keep it in UCS-2 or UTF-16.)
+	// for why we can't just keep it in UCS-2/UTF-16.)
 	const char16_t *utf16Value = reinterpret_cast<const char16_t *>(utf16Array.data());
 	size_t utf16Size = utf16Array.length() / sizeof(char16_t);
-
 	utf8_length_ = lengthBytesUTF8(utf16Value, utf16Size);
+	hasMultiByteChars = (utf16Size != utf8_length_);
+	if (hasMultiByteChars) {
 	utf8Value.reserve(utf8_length_);
 	stringToUTF8Array(utf16Value, utf16Size, utf8Value);
+	} else {
+	  // No need to convert; can use buffer as UTF-8 directly.
+	  utf8Value = std::string(reinterpret_cast<const char *>(utf16Array.data()));
+	}
 
-	// printf("buffer len is: %d\n", utf16Array.length());
-	// printf("UTF-8: len %d:", utf8_length_);
-	// for (int i = 0; i < utf8Value.length(); i++)
-	// {
-	// 	printf(" %02hhx", utf8Value[i]);
-	// }
-	// printf("\n");
-	// wprintf(L"UTF-16: len %d: %04x %04x %04x\n", utf16Size, utf16Value[0], utf16Value[1], utf16Value[2]);
-
-	hasMultiByteChars = (utf16Size != utf8_length_);
-
+	// Cache character offset conversion between UTF-8 and UTF-16; see
+	// https://github.com/atom/node-oniguruma/pull/46.
 	if (hasMultiByteChars)
 	{
 		utf16_length_ = utf16Size;
