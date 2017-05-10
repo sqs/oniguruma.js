@@ -51,10 +51,10 @@ for (let i = 0; i < max; i++) {
 		new OnigScanner(['this', 'var', 'selector', 'window']),
 	);
 
-	// console.log('oneline.js');
-	// runBenchmarkSync(
-	//   fs.readFileSync(fixturePath('oneline.js'), 'utf8').split('\n'),
-	//   new OnigScanner(['\\[', '\\]', '\\{', '\\}']),
-	// );
+	console.log('oneline.js');
+	runBenchmarkSync(
+		fs.readFileSync(fixturePath('oneline.js'), 'utf8').split('\n'),
+		new OnigScanner(['\\[', '\\]', '\\{', '\\}']),
+	);
 	console.log();
 }
