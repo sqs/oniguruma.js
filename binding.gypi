@@ -116,8 +116,8 @@
 
             # Optimized production build:
             #
-            'cflags': ['-O3', '--memory-init-file', '0', '-s', 'ALLOW_MEMORY_GROWTH=1'],
-            'ldflags': ['-O3', '--memory-init-file', '0', '-s', 'ALLOW_MEMORY_GROWTH=1'],
+            'cflags': ['-O3', '--memory-init-file', '0'],
+            'ldflags': ['-O3', '--memory-init-file', '0'],
         }],
     ]
 }
