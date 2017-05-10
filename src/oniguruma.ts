@@ -41,6 +41,7 @@ binding.bind('OnigCaptureIndex', OnigCaptureIndexImpl);
 
 class OnigNextMatchResult implements LibTypes.OnigNextMatchResult {
 	constructor(
+		public noMatch: boolean,
 		public index: number,
 		public captureIndices: LibTypes.OnigCaptureIndex[],
 	) { }
@@ -106,20 +107,11 @@ export interface OnigScanner extends LibTypes.OnigScanner {
 OnigScanner.prototype.findNextMatchSync = function (s: string | OnigString, startPosition: number = 0): OnigNextMatchResult | null {
 	const os: LibTypes.OnigString = convertToOnigString(s) as any;
 	const result = this.FindNextMatchSync(os, convertToPositiveCountableInteger(startPosition));
-	if (typeof s === 'string') {
-		os.free!();
+	if (typeof s === 'string') { os.free!(); }
+	if (result.noMatch) {
+		return null;
 	}
-	if (result) {
-		const matchResult = new OnigNextMatchResult(result.index, result.captureIndices.map(c => ({
-			index: c.index,
-			start: c.start,
-			end: c.end,
-			length: c.length,
-		})));
-		result.free!();
-		return matchResult;
-	}
-	return null;
+	return result as OnigNextMatchResult;
 };
 
 OnigScanner.prototype._findNextMatchSync = OnigScanner.prototype.findNextMatchSync;

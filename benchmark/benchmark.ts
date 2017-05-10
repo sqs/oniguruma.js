@@ -35,22 +35,26 @@ function fixturePath(name: string): string {
 	return path.join(__dirname, '..', '..', 'benchmark', name);
 }
 
-for (let i = 0; i < 10; i++) {
+const max = 1000;
+for (let i = 0; i < max; i++) {
+	console.log((i + 1) + '/' + max);
+
 	console.log('medium.go');
 	runBenchmarkSync(
 		fs.readFileSync(fixturePath('medium.go'), 'utf8').split('\n'),
 		new OnigScanner(['\\(', '\\)', '\\{', '\\}', '\\/\\/']),
 	);
 
-	console.log('large.js');
-	runBenchmarkSync(
-		fs.readFileSync(fixturePath('large.js'), 'utf8').split('\n'),
-		new OnigScanner(['this', 'var', 'selector', 'window']),
-	);
+	// console.log('large.js');
+	// runBenchmarkSync(
+	// 	fs.readFileSync(fixturePath('large.js'), 'utf8').split('\n'),
+	// 	new OnigScanner(['this', 'var', 'selector', 'window']),
+	// );
 
 	// console.log('oneline.js');
 	// runBenchmarkSync(
 	//   fs.readFileSync(fixturePath('oneline.js'), 'utf8').split('\n'),
 	//   new OnigScanner(['\\[', '\\]', '\\{', '\\}']),
 	// );
+	console.log();
 }

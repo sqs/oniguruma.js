@@ -24,8 +24,14 @@ export class OnigNextMatchResult extends NBindBase {
 	/** OnigNextMatchResult(); */
 	constructor();
 
-	/** OnigNextMatchResult(int32_t, std::vector<OnigCaptureIndex>); */
-	constructor(p0: number, p1: OnigCaptureIndex[]);
+	/** OnigNextMatchResult(bool); */
+	constructor(p0: boolean);
+
+	/** OnigNextMatchResult(bool, int32_t, std::vector<OnigCaptureIndex>); */
+	constructor(p0: boolean, p1: number, p2: OnigCaptureIndex[]);
+
+	/** bool noMatch; -- Read-only */
+	noMatch: boolean;
 
 	/** int32_t index; -- Read-only */
 	index: number;
@@ -48,11 +54,8 @@ export class OnigScanner extends NBindBase {
 	/** OnigScanner(std::vector<std::string>); -- Strict */
 	constructor(p0: string[]);
 
-	/** std::shared_ptr<OnigNextMatchResult> FindNextMatchSync(OnigString &, int32_t); -- Strict */
-	FindNextMatchSync(p0: OnigString, p1: number): OnigNextMatchResult | null;
-
-	/** static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(std::shared_ptr<OnigResult>, OnigString &); */
-	static CaptureIndicesForMatch(p0: OnigResult, p1: OnigString): OnigCaptureIndex[];
+	/** OnigNextMatchResult FindNextMatchSync(OnigString &, int32_t); -- Strict */
+	FindNextMatchSync(p0: OnigString, p1: number): OnigNextMatchResult;
 }
 
 export class OnigString extends NBindBase {

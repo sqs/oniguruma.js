@@ -11,7 +11,6 @@
                 "dist/test/**/*_test.js"
             ],
             "sourceMaps": true,
-            "cwd": "${workspaceRoot}",
             "outFiles": [
                 "${workspaceRoot}/dist/**/*.js"
             ],
@@ -24,6 +23,7 @@
             "name": "Run Benchmark",
             "program": "${workspaceRoot}/dist/benchmark/benchmark.js",
             "sourceMaps": true,
+            "showAsyncStacks": true,
             "cwd": "${workspaceRoot}",
             "outFiles": [
                 "${workspaceRoot}/dist/**/*.js"

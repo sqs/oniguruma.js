@@ -40,20 +40,23 @@ class OnigNextMatchResult
 {
 public:
   OnigNextMatchResult() {}
-  OnigNextMatchResult(int index, std::vector<OnigCaptureIndex> captureIndices)
+  OnigNextMatchResult(bool noMatch) : noMatch(noMatch) {}
+  OnigNextMatchResult(bool noMatch, int index, std::vector<OnigCaptureIndex> captureIndices)
       : index(index), captureIndices(captureIndices) {}
   explicit OnigNextMatchResult(const OnigNextMatchResult *other)
-      : index(other->index), captureIndices(other->captureIndices) {}
+      : noMatch(other->noMatch), index(other->index), captureIndices(other->captureIndices) {}
 
+  bool noMatch;
   int index;
   std::vector<OnigCaptureIndex> captureIndices;
 
+  bool getNoMatch() { return noMatch; }
   int getIndex() { return index; }
   std::vector<OnigCaptureIndex> getCaptureIndices() { return captureIndices; }
 
   void toJS(nbind::cbOutput output)
   {
-    output(index, captureIndices);
+    output(noMatch, index, captureIndices);
   }
 };
 
@@ -61,8 +64,7 @@ class OnigScanner
 {
 public:
   OnigScanner(std::vector<std::string> sources);
-  std::shared_ptr<OnigNextMatchResult> FindNextMatchSync(OnigString &onigString, int startLocation);
-  static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(std::shared_ptr<OnigResult>, OnigString &source);
+  OnigNextMatchResult FindNextMatchSync(OnigString &onigString, int startLocation);
 
 private:
   vector<shared_ptr<OnigRegExp>> regExps;

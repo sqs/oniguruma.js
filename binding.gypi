@@ -107,8 +107,14 @@
         ['asmjs==1', {
             # Debugging build:
             #
-            'cflags': ['-O0', '--memory-init-file', '0', '-g4', '-s', 'ALLOW_MEMORY_GROWTH=1'],
-            'ldflags': ['-O0', '--memory-init-file', '0', '-g4', '-s', 'ALLOW_MEMORY_GROWTH=1'],
+            'cflags': ['-O0', '--memory-init-file', '0', '-g4'],
+            'ldflags': [
+				'-O0', 
+				'-g4',
+				'--memory-init-file', '0',
+				# '-s', 'TOTAL_MEMORY=1694498816',
+				'-s', 'ALLOW_MEMORY_GROWTH=1',
+			],
 
             # Optimized production build:
             #

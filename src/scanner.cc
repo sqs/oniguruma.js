@@ -1,32 +1,6 @@
 #include "./scanner.h"
 
-OnigScanner::OnigScanner(std::vector<std::string> sources)
-{
-  int length = sources.size();
-  regExps.resize(length);
-
-  for (int i = 0; i < length; i++)
-  {
-    regExps[i] = shared_ptr<OnigRegExp>(new OnigRegExp(sources[i]));
-  }
-
-  searcher = shared_ptr<OnigSearcher>(new OnigSearcher(regExps));
-}
-
-std::shared_ptr<OnigNextMatchResult> OnigScanner::FindNextMatchSync(OnigString &onigString, int startLocation)
-{
-  shared_ptr<OnigResult> bestResult = searcher->Search(onigString, startLocation);
-  if (bestResult != NULL)
-  {
-    std::shared_ptr<OnigNextMatchResult> result(new OnigNextMatchResult());
-    result->index = bestResult->Index();
-    result->captureIndices = CaptureIndicesForMatch(bestResult, onigString);
-    return result;
-  }
-  return std::shared_ptr<OnigNextMatchResult>();
-}
-
-std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(std::shared_ptr<OnigResult> result, OnigString &source)
+static std::vector<OnigCaptureIndex> CaptureIndicesForMatch(std::shared_ptr<OnigResult> result, OnigString &source)
 {
   int resultCount = result->Count();
   std::vector<OnigCaptureIndex> captures;
@@ -48,6 +22,32 @@ std::vector<OnigCaptureIndex> OnigScanner::CaptureIndicesForMatch(std::shared_pt
   return captures;
 }
 
+OnigScanner::OnigScanner(std::vector<std::string> sources)
+{
+  int length = sources.size();
+  regExps.resize(length);
+
+  for (int i = 0; i < length; i++)
+  {
+    regExps[i] = shared_ptr<OnigRegExp>(new OnigRegExp(sources[i]));
+  }
+
+  searcher = shared_ptr<OnigSearcher>(new OnigSearcher(regExps));
+}
+
+OnigNextMatchResult OnigScanner::FindNextMatchSync(OnigString &onigString, int startLocation)
+{
+  shared_ptr<OnigResult> bestResult = searcher->Search(onigString, startLocation);
+  if (bestResult != NULL)
+  {
+    return OnigNextMatchResult(
+        false,
+        bestResult->Index(),
+        CaptureIndicesForMatch(bestResult, onigString));
+  }
+  return OnigNextMatchResult(true);
+}
+
 #include "nbind/nbind.h"
 
 #ifdef NBIND_CLASS
@@ -63,7 +63,9 @@ NBIND_CLASS(OnigCaptureIndex)
 NBIND_CLASS(OnigNextMatchResult)
 {
   construct<>();
-  construct<int, std::vector<OnigCaptureIndex>>();
+  construct<bool>();
+  construct<bool, int, std::vector<OnigCaptureIndex>>();
+  getter(getNoMatch);
   getter(getIndex);
   getter(getCaptureIndices);
 }
@@ -71,6 +73,5 @@ NBIND_CLASS(OnigScanner)
 {
   construct<std::vector<std::string>>(nbind::Strict());
   method(FindNextMatchSync, nbind::Strict());
-  method(CaptureIndicesForMatch);
 }
 #endif // NBIND_CLASS
