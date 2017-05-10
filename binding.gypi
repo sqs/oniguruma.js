@@ -107,13 +107,13 @@
         ['asmjs==1', {
             # Debugging build:
             #
-            #'cflags': ['-O0', '--memory-init-file', '0', '-g4', '-s', 'ALLOW_MEMORY_GROWTH=1'],
-            #'ldflags': ['-O0', '--memory-init-file', '0', '-g4', '-s', 'ALLOW_MEMORY_GROWTH=1'],
+            'cflags': ['-O0', '--memory-init-file', '0', '-g4', '-s', 'ALLOW_MEMORY_GROWTH=1'],
+            'ldflags': ['-O0', '--memory-init-file', '0', '-g4', '-s', 'ALLOW_MEMORY_GROWTH=1'],
 
             # Optimized production build:
             #
-            'cflags': ['-O3', '--memory-init-file', '0', '-s', 'ALLOW_MEMORY_GROWTH=1'],
-            'ldflags': ['-O3', '--memory-init-file', '0', '-s', 'ALLOW_MEMORY_GROWTH=1'],
+            #'cflags': ['-O3', '--memory-init-file', '0', '-s', 'ALLOW_MEMORY_GROWTH=1'],
+            #'ldflags': ['-O3', '--memory-init-file', '0', '-s', 'ALLOW_MEMORY_GROWTH=1'],
         }],
     ]
 }

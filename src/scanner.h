@@ -15,6 +15,8 @@ class OnigCaptureIndex
 {
 public:
   OnigCaptureIndex() {}
+  OnigCaptureIndex(int index, int start, int end, int length)
+      : index(index), start(start), end(end), length(length) {}
   explicit OnigCaptureIndex(const OnigCaptureIndex *other)
       : index(other->index), start(other->start), end(other->end), length(other->length) {}
 
@@ -38,6 +40,8 @@ class OnigNextMatchResult
 {
 public:
   OnigNextMatchResult() {}
+  OnigNextMatchResult(int index, std::vector<OnigCaptureIndex> captureIndices)
+      : index(index), captureIndices(captureIndices) {}
   explicit OnigNextMatchResult(const OnigNextMatchResult *other)
       : index(other->index), captureIndices(other->captureIndices) {}
 

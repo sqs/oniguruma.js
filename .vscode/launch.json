@@ -20,6 +20,19 @@
         },
         {
             "type": "node",
+            "request": "launch",
+            "name": "Run Benchmark",
+            "program": "${workspaceRoot}/dist/benchmark/benchmark.js",
+            "sourceMaps": true,
+            "cwd": "${workspaceRoot}",
+            "outFiles": [
+                "${workspaceRoot}/dist/**/*.js"
+            ],
+            "preLaunchTask": "TypeScript: Build & Watch",
+            "protocol": "inspector"
+        },
+        {
+            "type": "node",
             "request": "attach",
             "name": "Attach to Process",
             "port": 5858

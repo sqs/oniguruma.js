@@ -13,29 +13,44 @@ function runBenchmarkSync(lines: string[], scanner: OnigScanner) {
 			line = new OnigString(line);
 		}
 		for (let position = 0, length = line.length; position <= length; position++) {
-			if (scanner.findNextMatchSync(line, position)) { matches++ }
+			if (scanner.findNextMatchSync(line, position)) {
+				// console.log('MATCH');
+				matches++;
+			}
 		}
+		if (line instanceof OnigString) { line.dispose(); }
 	}
 
 	console.log(`sync:  ${matches} matches in ${Date.now() - startTime}ms`);
+
+	if (scanner.dispose) { scanner.dispose(); }
 }
 
-// console.log('medium.go');
-// runBenchmarkSync(
-//   fs.readFileSync(path.join(__dirname, 'medium.go'), 'utf8').split('\n'),
-//   new OnigScanner(['\\(', '\\)', '\\{', '\\}', '\\/\\/'])
-// );
+function fixturePath(name: string): string {
+	// Support running from `benchmark/benchmark.js` dir using ts-node, or running from
+	// `dist/benchmark` using node.
+	if (path.basename(__dirname) === 'benchmark' && fs.existsSync(path.join(__dirname, name))) {
+		return path.join(__dirname, name);
+	}
+	return path.join(__dirname, '..', '..', 'benchmark', name);
+}
 
 for (let i = 0; i < 10; i++) {
+	console.log('medium.go');
+	runBenchmarkSync(
+		fs.readFileSync(fixturePath('medium.go'), 'utf8').split('\n'),
+		new OnigScanner(['\\(', '\\)', '\\{', '\\}', '\\/\\/']),
+	);
+
 	console.log('large.js');
 	runBenchmarkSync(
-		fs.readFileSync(path.join(__dirname, 'large.js'), 'utf8').split('\n'),
-		new OnigScanner(['this', 'var', 'selector', 'window'])
+		fs.readFileSync(fixturePath('large.js'), 'utf8').split('\n'),
+		new OnigScanner(['this', 'var', 'selector', 'window']),
 	);
-}
 
-// console.log('oneline.js');
-// runBenchmarkSync(
-//   fs.readFileSync(path.join(__dirname, 'oneline.js'), 'utf8').split('\n'),
-//   new OnigScanner(['\\[', '\\]', '\\{', '\\}'])
-// );
+	// console.log('oneline.js');
+	// runBenchmarkSync(
+	//   fs.readFileSync(fixturePath('oneline.js'), 'utf8').split('\n'),
+	//   new OnigScanner(['\\[', '\\]', '\\{', '\\}']),
+	// );
+}

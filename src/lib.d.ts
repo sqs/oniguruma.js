@@ -1,6 +1,12 @@
 export class NBindBase { free?(): void }
 
 export class OnigCaptureIndex extends NBindBase {
+	/** OnigCaptureIndex(); */
+	constructor();
+
+	/** OnigCaptureIndex(int32_t, int32_t, int32_t, int32_t); */
+	constructor(p0: number, p1: number, p2: number, p3: number);
+
 	/** int32_t index; -- Read-only */
 	index: number;
 
@@ -15,6 +21,12 @@ export class OnigCaptureIndex extends NBindBase {
 }
 
 export class OnigNextMatchResult extends NBindBase {
+	/** OnigNextMatchResult(); */
+	constructor();
+
+	/** OnigNextMatchResult(int32_t, std::vector<OnigCaptureIndex>); */
+	constructor(p0: number, p1: OnigCaptureIndex[]);
+
 	/** int32_t index; -- Read-only */
 	index: number;
 
