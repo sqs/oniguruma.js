@@ -155,12 +155,15 @@ OnigString::OnigString(nbind::Buffer utf16Array)
 	size_t utf16Size = utf16Array.length() / sizeof(char16_t);
 	utf8_length_ = lengthBytesUTF8(utf16Value, utf16Size);
 	hasMultiByteChars = (utf16Size != utf8_length_);
-	if (hasMultiByteChars) {
-	utf8Value.reserve(utf8_length_);
-	stringToUTF8Array(utf16Value, utf16Size, utf8Value);
-	} else {
-	  // No need to convert; can use buffer as UTF-8 directly.
-	  utf8Value = std::string(reinterpret_cast<const char *>(utf16Array.data()));
+	if (hasMultiByteChars)
+	{
+		utf8Value.reserve(utf8_length_);
+		stringToUTF8Array(utf16Value, utf16Size, utf8Value);
+	}
+	else
+	{
+		// No need to convert; can use buffer as UTF-8 directly.
+		utf8Value = std::string(reinterpret_cast<const char *>(utf16Array.data()));
 	}
 
 	// Cache character offset conversion between UTF-8 and UTF-16; see
