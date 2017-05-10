@@ -8,7 +8,7 @@
 // TODO(sqs): do these utf8 conversions using nan or the v8 API directly when running in v8, for perf and safety.
 
 // Adapted from https://github.com/kripken/emscripten/blob/6dc4ac5f9e4d8484e273e4dcc554f809738cedd6/src/preamble.js#L671.
-static size_t lengthBytesUTF8(const char16_t const *utf16Data, size_t len)
+static size_t lengthBytesUTF8(const char16_t *utf16Data, size_t len)
 {
 	size_t utf8Len = 0;
 	for (size_t i = 0; i < len; i++)
