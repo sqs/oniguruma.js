@@ -113,7 +113,7 @@
 				'-g4',
 				'--memory-init-file', '0',
 				# '-s', 'TOTAL_MEMORY=1694498816',
-				'-s', 'ALLOW_MEMORY_GROWTH=1',
+				# '-s', 'ALLOW_MEMORY_GROWTH=1',
 			],
 
             # Optimized production build:

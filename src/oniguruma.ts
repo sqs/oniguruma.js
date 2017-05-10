@@ -46,8 +46,8 @@ class OnigNextMatchResult implements LibTypes.OnigNextMatchResult {
 		public captureIndices: LibTypes.OnigCaptureIndex[],
 	) { }
 
-	fromJS(output: (index: number, captureIndices: LibTypes.OnigCaptureIndex[]) => void): void {
-		output(this.index, this.captureIndices);
+	fromJS(output: (noMatch: boolean, index: number, captureIndices: LibTypes.OnigCaptureIndex[]) => void): void {
+		output(this.noMatch, this.index, this.captureIndices);
 	}
 }
 
@@ -62,10 +62,9 @@ export class OnigRegExp {
 		this.scanner = new OnigScanner([source]);
 	}
 
-	static captureIndicesForMatch(s: string | OnigString, match: LibTypes.OnigNextMatchResult): OnigCaptureIndex[] | null {
+	static captureIndicesForMatch(s: string, match: LibTypes.OnigNextMatchResult): OnigCaptureIndex[] | null {
 		if (match) {
 			const { captureIndices }: { captureIndices: OnigCaptureIndex[] } = match;
-			const onigString = convertToOnigString(s);
 			for (const capture of Array.from(captureIndices)) {
 				capture.match = s.slice(capture.start, capture.end);
 			}
@@ -74,14 +73,17 @@ export class OnigRegExp {
 		return null;
 	}
 
-	searchSync(s: string | OnigString, startPosition: number = 0): OnigCaptureIndex[] | null {
-		s = convertToOnigString(s);
+	searchSync(s: string, startPosition: number = 0): OnigCaptureIndex[] | null {
+		const onigString = convertToOnigString(s);
 		const match = this.scanner.findNextMatchSync(s, startPosition);
-		if (match) { return OnigRegExp.captureIndicesForMatch(s, match); }
+		onigString.dispose();
+		if (match) {
+			return OnigRegExp.captureIndicesForMatch(s, match);
+		}
 		return null;
 	}
 
-	testSync(s: string | OnigString) {
+	testSync(s: string) {
 		return this.searchSync(s) != null;
 	}
 }

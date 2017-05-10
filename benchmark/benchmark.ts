@@ -45,11 +45,11 @@ for (let i = 0; i < max; i++) {
 		new OnigScanner(['\\(', '\\)', '\\{', '\\}', '\\/\\/']),
 	);
 
-	// console.log('large.js');
-	// runBenchmarkSync(
-	// 	fs.readFileSync(fixturePath('large.js'), 'utf8').split('\n'),
-	// 	new OnigScanner(['this', 'var', 'selector', 'window']),
-	// );
+	console.log('large.js');
+	runBenchmarkSync(
+		fs.readFileSync(fixturePath('large.js'), 'utf8').split('\n'),
+		new OnigScanner(['this', 'var', 'selector', 'window']),
+	);
 
 	// console.log('oneline.js');
 	// runBenchmarkSync(

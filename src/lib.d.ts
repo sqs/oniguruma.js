@@ -21,12 +21,6 @@ export class OnigCaptureIndex extends NBindBase {
 }
 
 export class OnigNextMatchResult extends NBindBase {
-	/** OnigNextMatchResult(); */
-	constructor();
-
-	/** OnigNextMatchResult(bool); */
-	constructor(p0: boolean);
-
 	/** OnigNextMatchResult(bool, int32_t, std::vector<OnigCaptureIndex>); */
 	constructor(p0: boolean, p1: number, p2: OnigCaptureIndex[]);
 
@@ -38,14 +32,6 @@ export class OnigNextMatchResult extends NBindBase {
 
 	/** std::vector<OnigCaptureIndex> captureIndices; -- Read-only */
 	captureIndices: OnigCaptureIndex[];
-}
-
-export class OnigRegExp extends NBindBase {
-	/** OnigRegExp(std::string &); */
-	constructor(p0: any);
-
-	/** std::shared_ptr<OnigResult> Search(OnigString &, int32_t); */
-	Search(p0: OnigString, p1: number): OnigResult | null;
 }
 
 export class OnigResult extends NBindBase {}

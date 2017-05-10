@@ -62,8 +62,6 @@ NBIND_CLASS(OnigCaptureIndex)
 }
 NBIND_CLASS(OnigNextMatchResult)
 {
-  construct<>();
-  construct<bool>();
   construct<bool, int, std::vector<OnigCaptureIndex>>();
   getter(getNoMatch);
   getter(getIndex);

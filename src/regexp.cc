@@ -71,13 +71,3 @@ shared_ptr<OnigResult> OnigRegExp::DoSearch(const char *data,
     return shared_ptr<OnigResult>();
   }
 }
-
-#include "nbind/nbind.h"
-
-#ifdef NBIND_CLASS
-NBIND_CLASS(OnigRegExp)
-{
-  construct<std::string &>();
-  method(Search);
-}
-#endif // NBIND_CLASS

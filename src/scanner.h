@@ -39,10 +39,9 @@ public:
 class OnigNextMatchResult
 {
 public:
-  OnigNextMatchResult() {}
   OnigNextMatchResult(bool noMatch) : noMatch(noMatch) {}
   OnigNextMatchResult(bool noMatch, int index, std::vector<OnigCaptureIndex> captureIndices)
-      : index(index), captureIndices(captureIndices) {}
+      : noMatch(noMatch), index(index), captureIndices(captureIndices) {}
   explicit OnigNextMatchResult(const OnigNextMatchResult *other)
       : noMatch(other->noMatch), index(other->index), captureIndices(other->captureIndices) {}
 
@@ -58,6 +57,9 @@ public:
   {
     output(noMatch, index, captureIndices);
   }
+
+private:
+  OnigNextMatchResult() = delete;
 };
 
 class OnigScanner
