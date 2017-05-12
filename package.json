@@ -2,7 +2,7 @@
   "name": "@sourcegraph/oniguruma",
   "main": "./dist/src/oniguruma.js",
   "description": "oniguruma regular expression library",
-  "version": "6.2.1-dev-3",
+  "version": "6.2.1-dev-4",
   "licenses": [
     {
       "type": "TBD"
