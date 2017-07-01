@@ -36,7 +36,7 @@
   "dependencies": {
     "autogypi": "^0.2.2",
     "nan": "^2.0.9",
-    "nbind": "^0.3.11",
+    "nbind": "^0.3.12",
     "node-gyp": "^3.6.1"
   },
   "scripts": {

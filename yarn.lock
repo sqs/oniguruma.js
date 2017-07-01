@@ -6,7 +6,7 @@
   version "2.2.41"
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-2.2.41.tgz#e27cf0817153eb9f2713b2d3f6c68f1e1c3ca608"
 
-"@types/node@^7.0.15", "@types/node@^7.0.18":
+"@types/node@^7.0.18":
   version "7.0.18"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.18.tgz#cd67f27d3dc0cfb746f0bdd5e086c4c5d55be173"
 
@@ -653,11 +653,10 @@ nan@^2.0.9, nan@^2.6.2:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/nan/-/nan-2.6.2.tgz#e4ff34e6c95fdfb5aecc08de6596f43605a7db45"
 
-nbind@^0.3.11:
-  version "0.3.11"
-  resolved "https://registry.yarnpkg.com/nbind/-/nbind-0.3.11.tgz#1616e49bfee231d48381851b4ffef10b8cd47a91"
+nbind@^0.3.12:
+  version "0.3.12"
+  resolved "https://registry.yarnpkg.com/nbind/-/nbind-0.3.12.tgz#5b022d45950c1d664b360b54e6c29fa2fa5b8a59"
   dependencies:
-    "@types/node" "^7.0.15"
     emscripten-library-decorator "~0.2.2"
     mkdirp "~0.5.1"
     nan "^2.6.2"
