@@ -2,7 +2,7 @@
   "name": "@sourcegraph/oniguruma",
   "main": "./dist/src/oniguruma.js",
   "description": "oniguruma regular expression library",
-  "version": "6.2.1-dev-4",
+  "version": "6.2.1-dev-5",
   "licenses": [
     {
       "type": "TBD"
@@ -46,7 +46,7 @@
     "copyasm": "copyasm",
     "ndts": "ndts",
     "build:native": "autogypi -r build && node-gyp -C build/native configure build && copyasm build/native dist/native && ndts build/native > src/lib.d.ts",
-    "build:asmjs": "autogypi -r build && node-gyp -C build/asmjs configure build --asmjs=1 && copyasm build/asmjs dist/asmjs && ndts build/asmjs > src/lib.d.ts",
+    "build:asmjs": "autogypi -r build && node-gyp -C build/asmjs configure build --asmjs=1 && copyasm build/asmjs dist/asmjs && ndts build/asmjs > src/lib.d.ts && echo HACK to make this file strict-valid && sed -i 's/_a=_typeModule/var _a;_a=_typeModule/' dist/asmjs/nbind.js",
     "install": "echo SKIPPING INSTALL '(npm run build:native || echo Warning: problems with native build)'",
     "prepublish": "(npm run build:asmjs || echo Warning: problems with asm.js build)",
     "lint": "./node_modules/.bin/tslint --format verbose \"src/**/*.ts\"",
