@@ -53,6 +53,6 @@ export class OnigString extends NBindBase {
 	/** const char * utf8_value(); */
 	utf8_value(): string | null;
 
-	/** uint32_t utf8_length(); */
+	/** uint64_t utf8_length(); */
 	utf8_length(): number;
 }
