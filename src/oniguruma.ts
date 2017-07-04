@@ -1,11 +1,12 @@
 import * as nbind from 'nbind';
 import * as LibTypes from './lib';
+import * as path from 'path';
 import { init as asmjsInit } from './asmjs';
 
 const platform = 'asmjs'; // (process.env.EMSCRIPTEN ? 'asmjs' : 'native');
 let binding: nbind.Binding<typeof LibTypes>;
 if (nbind.init) {
-	binding = nbind.init<typeof LibTypes>('dist/' + platform);
+	binding = nbind.init<typeof LibTypes>(path.join(path.dirname(__dirname), platform));
 } else {
 	const Module = {
 		TOTAL_MEMORY: 16 * 1024 * 1024 * 2,
